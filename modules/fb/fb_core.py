@@ -1,6 +1,6 @@
 """
 This file is used to create and communicate with the Facebook Messenger API
-Don't put bot logic in here, put  it in fb_bot_logic.py
+Don't put bot logic in here, put  it in fb_bot.py
 """
 # -*- coding: utf-8 -*-
 import json
