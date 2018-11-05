@@ -5,9 +5,10 @@ import codecs
 from functools import wraps
 from modules.fb.fb_bot import configure_bot
 from modules.fb.handler_methods import *
-from modules.twitter.twitter_core import webhook_challenge
+from modules.twitter.twitter_core import *
 from modules.twitter.twitter_bot import *
 import requests
+import dispatcher
 
 
 app = Flask(__name__)
@@ -57,10 +58,6 @@ def test_route():
     return jsonify({"value": "Hello World"})
 
 
-def remove_escaped_characters(text):
-    return codecs.unicode_escape_decode(text)[0]
-
-
 @app.route('/dialogFlowEndpoint', methods=['POST'])
 @requires_auth
 def df_endpoint():
@@ -68,7 +65,8 @@ def df_endpoint():
     Webhook that DialogFlow contacts
     :return:
     """
-    pass
+    dispatcher.handle_request(request)
+    return jsonify({"status": "success"})
 
 
 @app.route('/twitter', methods=['GET', 'POST'])
@@ -80,9 +78,10 @@ def twitter_handler():
         pprint(request.get_json())
         req = request.get_json()
         if "apps" not in req and "direct_message_events" in req:
-            send_options()
+            # send_options()
+            twt_handle_request(req)
         print("*" * 100)
-    return jsonify({'status': 'k'})
+    return jsonify({'status': 'success'})
 
 
 @app.route('/register_twitter_endpoint', methods=["GET"])

@@ -1,191 +1,82 @@
-from config import twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret
-from TwitterAPI import TwitterAPI
-import json
-from pprint import pprint
+from modules.twitter import twitter_core
+from modules.dialogflow import nlp
+from modules.helpers.helpers import *
 
-#User ID: 46435366
-#Fake ID: 1053316284375539712
+"""
+{'direct_message_events': [{'created_timestamp': '1540561880170',
+                            'id': '1055819166702338053',
+                            'message_create': {'message_data': {'entities': {'hashtags': [],
+                                                                             'symbols': [],
+                                                                             'urls': [],
+                                                                             'user_mentions': []},
+                                                                'text': 'Hi'},
+                                               'sender_id': '1053316284375539712',
+                                               'target': {'recipient_id': '46435366'}},
+                            'type': 'message_create'}],
+ 'for_user_id': '46435366',
+ 'users': {'1053316284375539712': {'created_timestamp': '1539965146647',
+                                   'followers_count': 1,
+                                   'friends_count': 1,
+                                   'id': '1053316284375539712',
+                                   'name': 'Randy Ram',
+                                   'profile_image_url': 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png',
+                                   'profile_image_url_https': 'https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png',
+                                   'protected': False,
+                                   'screen_name': 'HyperManTT',
+                                   'statuses_count': 0,
+                                   'verified': False},
+           '46435366': {'created_timestamp': '1244740502000',
+                        'description': '🇹🇹\xa0Electrical Engineer | Computer '
+                                       'Scientist | Head of Software '
+                                       'Engineering',
+                        'followers_count': 192,
+                        'friends_count': 167,
+                        'id': '46435366',
+                        'location': 'Trinidad and Tobago',
+                        'name': 'Randy',
+                        'profile_image_url': 'http://pbs.twimg.com/profile_images/1019669603520274433/-dLD2YMH_normal.jpg',
+                        'profile_image_url_https': 'https://pbs.twimg.com/profile_images/1019669603520274433/-dLD2YMH_normal.jpg',
+                        'protected': False,
+                        'screen_name': 'Randy_Ram',
+                        'statuses_count': 6823,
+                        'verified': False}}}
 
-# auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
-# auth.set_access_token(twitter_access_token, twitter_access_token_secret)
-#
-# api = tweepy.API(auth)
-
-twt_bot = TwitterAPI(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret)
+"""
 
 
-def configure_bot():
-    return
-
-
-def send_dm():
-    user_id = '1053316284375539712'
-    message_text = 'Sorry, was testing something!'
-
-    event = {
-        "event": {
-            "type": "message_create",
-            "message_create": {
-                "target": {
-                "recipient_id": user_id
+btn_info = [
+                {
+                    "type": "web_url",
+                    "label": "See flight details",
+                    "url": "https://www.google.com"
                 },
-                "message_data": {
-                    "text": message_text
-                }
-            }
-        }
-    }
-
-    r = twt_bot.request('direct_messages/events/new', json.dumps(event))
-    print('SUCCESS' if r.status_code == 200 else 'PROBLEM: ' + r.text)
-
-
-def send_welcome_message():
-    user_id = '1053316284375539712'
-    wm_params = {
-        "send_welcome_message": {
-            "message_data": {
-                "text": "Hi! What can I do for you today?",
-                "quick_reply": {
-                    "type": "options",
-                    "options": [
-                        {
-                            "label": "Order Status",
-                            "description": "Check the status of an order recently placed.",
-                            "metadata": "external_id_1"
-                        },
-                        {
-                            "label": "Return",
-                            "description": "Return a product you received less than 30 days ago.",
-                            "metadata": "external_id_2"
-                        },
-                        {
-                            "label": "Change Order",
-                            "description": "Update or cancel an order recently placed.",
-                            "metadata": "external_id_3"
-                        },
-                        {
-                            "label": "Talk to a Human",
-                            "description": "Talk with a customer service agent.",
-                            "metadata": "external_id_4"
-                        }
-                    ]
-                }
-            }
-        }
-    }
-    resp = twt_bot.request('direct_messages/welcome_messages/new', json.dumps(wm_params))
-    pprint(resp.json())
-    print('SUCCESS' if resp.status_code == 200 else 'PROBLEM: ' + resp.text)
-
-
-def tweet():
-    TWEET_TEXT = 'Testing from Python API'
-    r = twt_bot.request('statuses/update', {'status': TWEET_TEXT})
-    print('SUCCESS' if r.status_code == 200 else 'PROBLEM: ' + r.text)
-
-
-def get_user_id():
-    SCREEN_NAME = 'HyperManTT'
-    r = twt_bot.request('users/lookup', {'screen_name': SCREEN_NAME})
-    print(r.json()[0]['id'] if r.status_code == 200 else 'PROBLEM: ' + r.text)
-
-
-def create_webhook():
-    query_param = {
-        "url": "https://10ae46de.ngrok.io/twitter"
-    }
-    r = twt_bot.request('account_activity/all/:%s/webhooks' % ("development"), params=query_param)
-    print(r.json())
-
-
-def get_webhooks():
-    r = twt_bot.request('account_activity/all/webhooks')
-    pprint(r.json())
-
-
-def add_subscription():
-    r = twt_bot.request('account_activity/all/:%s/subscriptions' % ("development"), method_override="POST")
-    pprint(r.response.status_code)
-
-
-def get_subscriptions():
-    r = twt_bot.request('account_activity/all/:%s/subscriptions/all/list' % ("development"))
-    print(r.json())
-
-
-def trigger_crc():
-    r = twt_bot.request("account_activity/all/:%s/webhooks/:%s" % ("development", "1055127917909475329"), method_override="PUT")
-    pprint(r.response.status_code)
-
-
-def get_welcome_messages():
-    r = twt_bot.request('direct_messages/welcome_messages/list')
-    pprint(r.json())
-
-
-def delete_welcome_message(id):
-    payload = {
-        'id': id
-    }
-    r = twt_bot.request('direct_messages/welcome_messages/destroy', params=payload)
-    pprint(r.status_code)
-
-
-def send_options():
-    id = '1053316284375539712'
-    event = {
-        "event": {
-            "type": "message_create",
-            "message_create": {
-                "target": {
-                    "recipient_id": id
+                {
+                    "type": "web_url",
+                    "label": "Map it",
+                    "url": "https://www.google.com"
                 },
-                "message_data": {
-                    "text": "Hi, how can I help you?",
-                    "quick_reply": {
-                        "type": "options",
-                        "options": [
-                            {
-                                "label": "Order Status",
-                                "description": "Check the status of an order recently placed.",
-                                "metadata": "external_id_1"
-                            },
-                            {
-                                "label": "Return",
-                                "description": "Return a product you received less than 30 days ago.",
-                                "metadata": "external_id_2"
-                            },
-                            {
-                                "label": "Change Order",
-                                "description": "Update or cancel an order recently placed.",
-                                "metadata": "external_id_3"
-                            },
-                            {
-                                "label": "Talk to a Human",
-                                "description": "Talk with a customer service agent.",
-                                "metadata": "external_id_4"
-                            }
-                        ]
-                    }
+                {
+                    "type": "web_url",
+                    "label": "Speak to an agent",
+                    "url": "https://twitter.com/messages/compose?recipient_id=243654400"
                 }
-            }
-        }
-    }
-    r = twt_bot.request('direct_messages/events/new', json.dumps(event))
-    print('SUCCESS' if r.status_code == 200 else 'PROBLEM: ' + r.text)
+            ]
 
 
-if __name__ == "__main__":
-    # tweet()
-    # send_dm()
-    # get_user_id()
-    # send_options()
-    # send_welcome_message()
-    # create_webhook()
-    # delete_welcome_message("1055188637325946884")
-    get_welcome_messages()
-    # get_webhooks()
-    # add_subscription()
-    # get_subscriptions()
-    # trigger_crc()
+def twt_get_flight_status(request):
+    pass
+
+
+def twt_handle_request(request):
+    """
+    :param request: Incoming request from Twitter in JSON format (shown above)
+    :return:
+    """
+
+    text = request['direct_message_events'][0]['message_create']['message_data']['text']
+    sender_id = request['direct_message_events'][0]['message_create']['sender_id']
+    ai_json_response = nlp.ai_instantiate_and_get_response(text, sender_id)
+    # pprint(ai_json_response)
+    text_to_send = remove_escaped_characters(ai_json_response["result"]["fulfillment"]["speech"])
+    # twitter_core.send_dm(sender_id, text_to_send)
+    twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
