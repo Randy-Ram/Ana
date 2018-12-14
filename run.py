@@ -7,6 +7,7 @@ from modules.fb.fb_bot import configure_bot
 from modules.fb.handler_methods import *
 from modules.twitter.twitter_core import *
 from modules.twitter.twitter_bot import *
+from modules.whatsapp.whatsapp_bot import *
 import requests
 import dispatcher
 
@@ -79,9 +80,15 @@ def twitter_handler():
         req = request.get_json()
         if "apps" not in req and "direct_message_events" in req:
             # send_options()
-            twt_handle_request(req)
+            twitter_handle_user_request(req)
         print("*" * 100)
     return jsonify({'status': 'success'})
+
+
+@app.route('/whatsapp', methods=['GET', 'POST'])
+def whatsapp_handler():
+    whatsapp_handle_request(request.form)
+    return "Success"
 
 
 @app.route('/register_twitter_endpoint', methods=["GET"])

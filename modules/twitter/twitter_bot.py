@@ -1,6 +1,9 @@
 from modules.twitter import twitter_core
-from modules.dialogflow import nlp
+from modules.dialogflow import df
 from modules.helpers.helpers import *
+from modules.cal import flight_status, default_responses
+from pprint import pprint
+from config import df_project_id
 
 """
 {'direct_message_events': [{'created_timestamp': '1540561880170',
@@ -63,11 +66,113 @@ btn_info = [
             ]
 
 
-def twt_get_flight_status(request):
-    pass
+def twitter_get_flight_status(request, session_id):
+    """
+    Function that gets the flight number and date, sends to CAL's API and returns response to user
+    :param request: Request from DF
+    :param session_id: User ID to respond too
+    :return:
+    """
+    api_resp = flight_status.fetch_flight_status(request)
+    if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
+        twitter_core.send_dm(session_id, api_resp["preamble"])
+    for each_flight in api_resp["response_list"]:
+            twitter_core.send_dm(session_id, each_flight['msg'])
 
 
-def twt_handle_request(request):
+def twitter_dutyfree(request, session_id):
+    btn_info = [
+                    {
+                        "type": "web_url",
+                        "label": "Order Items for Pickup",
+                        "url": "https://caribbeanairlinesdutyfree.com/"
+                    },
+                    {
+                        "type": "web_url",
+                        "label": "More Info on CAL Duty Free",
+                        "url": "https://www.caribbean-airlines.com/#/caribbean-experience/duty-free"
+                    }
+                ]
+    twitter_core.send_text_with_buttons(session_id, "Here you go...", btn_info)
+
+
+def twitter_miles(request, session_id):
+    btn_info = [
+        {
+            "type": "web_url",
+            "label": "Manage Miles Account",
+            "url": "https://caribbeanairlines.frequentflyer.aero"
+        },
+        {
+            "type": "web_url",
+            "label": "More Info on Caribbean Miles",
+            "url": "https://www.caribbean-airlines.com/#/loyalty-programmes/caribbean-miles"
+        }
+    ]
+    twitter_core.send_text_with_buttons(session_id, "Here some useful links regarding Caribbean Miles", btn_info)
+
+
+def twitter_checkin(request, session_id):
+    btn_info = [
+        {
+            "type": "web_url",
+            "label": "Online Check-In",
+            "url": "https://checkin.si.amadeus.net/1ASIHSSCWEBBW/sscwbw/checkin"
+        }
+    ]
+    twitter_core.send_text_with_buttons(session_id, "You can click below to checkin online", btn_info)
+
+
+def twitter_cars(request, session_id):
+    btn_info = [
+        {
+            "type": "web_url",
+            "label": "Rent a Car",
+            "url": "http://cars.cartrawler.com/caribbeanairlines"
+        }
+    ]
+    twitter_core.send_text_with_buttons(session_id, "We offer car rentals!", btn_info)
+
+
+def twitter_hotels(request, session_id):
+    btn_info = [
+        {
+            "type": "web_url",
+            "label": "Book a Hotel",
+            "url": "http://hotels.caribbean-airlines.com"
+        }
+    ]
+    twitter_core.send_text_with_buttons(session_id, "We offer hotel bookings", btn_info)
+
+
+# The POSITION OF THIS dict MATTERS - BEFORE twitter_handle_df_request and AFTER other functions
+intent_mapping = {
+    'flight.status': twitter_get_flight_status,
+    'faq.dutyfree': twitter_dutyfree,
+    'faq.miles_info': twitter_miles,
+    'faq.checkin.online': twitter_checkin,
+    'faq.cars': twitter_cars,
+    'faq.hotels': twitter_hotels,
+    'flight.checkin': twitter_checkin
+}
+
+
+def twitter_handle_df_request(request, session_id):
+    if 'queryResult' in request and 'intent' in request['queryResult']:
+        intent = request['queryResult']['intent']['displayName']
+    else:
+        raise Exception("Twitter DF handler needs a valid intent")
+    # Use intent mapping dict to call function. All functions take the request and the session_id
+    if intent in intent_mapping:
+        intent_mapping[intent](request, session_id)
+    elif intent in default_responses.responses:
+        response = default_responses.responses[intent]
+        twitter_core.send_dm(session_id, response)
+    else:
+        raise Exception(intent + ": Intent not supported")
+
+
+def twitter_handle_user_request(request):
     """
     :param request: Incoming request from Twitter in JSON format (shown above)
     :return:
@@ -75,8 +180,11 @@ def twt_handle_request(request):
 
     text = request['direct_message_events'][0]['message_create']['message_data']['text']
     sender_id = request['direct_message_events'][0]['message_create']['sender_id']
-    ai_json_response = nlp.ai_instantiate_and_get_response(text, sender_id)
-    # pprint(ai_json_response)
-    text_to_send = remove_escaped_characters(ai_json_response["result"]["fulfillment"]["speech"])
-    # twitter_core.send_dm(sender_id, text_to_send)
-    twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
+    df_sender_id = 'twitter_' + sender_id
+    ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")
+    pprint(ai_json_response)
+    # text_to_send = remove_escaped_characters(ai_json_response["result"]["fulfillment"]["speech"])
+    if 'fulfillmentText' in ai_json_response:
+        text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
+        twitter_core.send_dm(sender_id, text_to_send)
+        # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)

@@ -38,6 +38,11 @@ def get_from_to_date(iso_time):
     return f_date, t_date
 
 
+def format_datetime(iso_time):
+    new_datetime = datetime.datetime.strptime(iso_time, "%Y-%m-%dT%H:%M:%S")
+    return new_datetime.strftime("%a %d %b, %Y") + " " + new_datetime.strftime("%I:%M%p")
+
+
 def get_flight_info(flight_number, iso_date):
     from_date, to_date = get_from_to_date(iso_date)
     if "BW" in flight_number:
@@ -53,6 +58,92 @@ def get_flight_info(flight_number, iso_date):
     return resp.json()
 
 
+def fetch_flight_status(df_request):
+    print("Getting flight status")
+    response_dict = {
+        'preamble': None,
+        'response_list': []
+    }
+    try:
+        date = df_request['queryResult']['parameters']['date']
+        flight_num = df_request['queryResult']['parameters']['flight-number']
+        # flight_resp = response_generator(date, flight_num)
+        day_of_date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").date()
+        flight_info = get_flight_info(flight_num, date)  # GET FLIGHT INFO FROM API
+        if len(flight_info.keys()) > 1:
+            response_dict['preamble'] = "It seems there were more than one flight {flight_num} on {dept_date}".format(
+                flight_num=flight_num,
+                dept_date=day_of_date
+            )
+        if len(flight_info) == 0:
+            response_dict['preamble'] = "I'm not seeing any flights for {flight_num} scheduled for {dept_date}".format(
+                flight_num=flight_num,
+                dept_date=day_of_date
+            )
+        else:
+            for key, flight_resp in flight_info.items():
+                flight_status = flight_resp["flight_status"]
+                formatted_arr_date = format_datetime(flight_resp['arr_time_local'])
+                formatted_dept_date = format_datetime(flight_resp['dept_time_local'])
+                if flight_status in ("Cancelled", "Delayed"):
+                    flight_status = "cancellation" if flight_status == "Cancelled" else "delay"
+                    response_dict['response_list'].append({'flight_status': flight_status, "msg": '', 'api_response': flight_resp})
+                    # fb_card = gen_fb_status_card(flight_resp, flight_status)
+                    # fb_bot.send_message_TypeC(user_session, fb_card)
+                elif flight_status == "Scheduled":
+                    msg = "{flight_num} is scheduled to depart {dept_city} on {dept_time} ({dept_code} time) and arrive" \
+                          " in {arr_city} at {arr_time} ({arr_code} time).".format(
+                        flight_num=flight_num,
+                        arr_city=flight_resp["arr_city"],
+                        arr_time=formatted_arr_date,
+                        dept_city=flight_resp["dept_city"],
+                        dept_time=formatted_dept_date,
+                        dept_code=flight_resp["dept_code"],
+                        arr_code=flight_resp["arr_code"]
+                    )
+                    response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
+                    # fb_bot.send_text_message(user_session, msg)
+                elif flight_status == "Completed":
+                    msg = "{flight_num} has already reached {arr_city} from {dept_city}. It arrived on {arr_time} " \
+                          "({arr_code} time).".format(
+                        flight_num=flight_num,
+                        arr_city=flight_resp["arr_city"],
+                        arr_time=formatted_arr_date,
+                        arr_code=flight_resp['arr_code'],
+                        dept_city=flight_resp['dept_city']
+                    )
+                    response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
+                    # fb_bot.send_text_message(user_session, msg)
+                elif flight_status == "Airborne":
+                    msg = '''{flight_num} departed {dept_city} at {dept_time} ({dept_code} time). It is currently 
+                    airborne and scheduled to arrive at {arr_city} at {arr_time} ({arr_code} time)'''.format(
+                        flight_num=flight_num,
+                        arr_city=flight_resp["arr_city"],
+                        arr_time=formatted_arr_date,
+                        dept_city=flight_resp["dept_city"],
+                        dept_time=formatted_dept_date,
+                        dept_code=flight_resp["dept_code"],
+                        arr_code=flight_resp["arr_code"]
+                    )
+                    response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
+                    # fb_bot.send_text_message(user_session, msg)
+                else:
+                    response_dict['response_list'].append({'flight_status': "error", "msg": "Sorry, I can't seem to "
+                                                                                            "find any information for "
+                                                                                            "that flight."})
+    except KeyError:
+        print(traceback.print_exc())
+        response_dict['response_list'].append(
+            {'flight_status': "error", "msg": "Sorry, I can't seem to find any information for that flight."})
+        # fb_bot.send_text_message(user_session, "Sorry, I can't seem to find any information for that flight.")
+    except Exception as e:
+        print(traceback.print_exc())
+        response_dict['response_list'].append(
+            {'flight_status': "error", "msg": "Sorry, I can't seem to find any information for that flight."})
+    finally:
+        return response_dict
+
+
 if __name__ == "__main__":
-    from_date, to_date = get_from_to_date('2018-10-30T12:00:00-04:00')
-    get_flight_info("BW600", from_date, to_date)
+    # from_date, to_date = get_from_to_date('2018-11-12T12:00:00-05:00')
+    get_flight_info("BW600", '2018-11-12T12:00:00-05:00')

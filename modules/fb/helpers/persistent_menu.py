@@ -12,7 +12,7 @@ def get_persistent_menu_buttons():
     # ]
     return [
         {
-        "title": "Flood \U000026C8",
+        "title": "Plan and Book \U00002708",
         "type": "nested",
         "call_to_actions": [
                 FBAttachment.button_postback("Check Flight Status \U0001F55B", "flight_status"),
@@ -29,7 +29,7 @@ def get_persistent_menu_buttons():
             ]
         },
         {
-        "title": "Earthquake \U0001F3DA",
+        "title": "Travel Info \U00002139",
         "type": "nested",
         "call_to_actions": [
             FBAttachment.button_postback("Baggage Info \U0001F6C4", "baggage info"),
@@ -38,7 +38,7 @@ def get_persistent_menu_buttons():
             FBAttachment.button_postback("Duty Free \U0001F943", "duty free")
         ]},
         {
-        "title": "Contact \U0001F4F1",
+        "title": "Support \U0001F6CE",
         "type": "nested",
         "call_to_actions": [
             FBAttachment.button_postback("Speak to Agent \U0001F469", "transfer_request"),

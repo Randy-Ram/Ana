@@ -5,7 +5,7 @@ e.g. on_postback is a method that is run when a postback is sent from Facebook -
 e.g. on_message is a method that is run when a user sends a message to the bot.
 """
 
-from modules.fb.fb_bot import fb_bot
+from modules.fb.fb_bot import fb_bot, facebook_handle_request
 from modules.fb.helpers.attachment import FBAttachment
 from pprint import pprint
 from modules.fb.helpers import persistent_menu
@@ -14,14 +14,15 @@ from modules.fb.helpers import persistent_menu
 def on_postback(sender, text, requestInfo):
     print("postback")
     print(text)
-    fb_bot.send_text_message(sender, 'Received postback "{0}"'.format(text))
+    # fb_bot.send_text_message(sender, 'Received postback "{0}"'.format(text))
     if text == 'get_started':
         send_initial_options(sender)
     elif text == "transfer_request":
         handover_request(sender)
     else:
-        pprint(text)
+        # pprint(text)
         # send_text_to_google(text, sender)
+        facebook_handle_request(sender, text)
 
 
 def on_location(sender, location, requestInfo):
@@ -31,18 +32,17 @@ def on_location(sender, location, requestInfo):
 
 def create_welcome_message(sender):
     user_info = fb_bot.get_userinfo(sender)
+    pprint(user_info)
     first_name = user_info['first_name']
-    return '''
-            \U0001F916 - Hello {0}! I'm Disastron, your friendly bot that would like to be of assistance to you \
-            during disasters. You can choose from the buttons below to get started'''.format(first_name)
+    return f"\U0001F916 - Hello {first_name}, I'm Ana. I'm a robot and I'll try to answer any questions you may have."
 
 
 def send_initial_options(sender):
     fb_bot.send_text_message(sender, create_welcome_message(sender), [
-        FBAttachment.quick_reply("Report Flooding \U0001F3AB"),
-        FBAttachment.quick_reply("Request Assistance \U0001F55B"),
-        FBAttachment.quick_reply("Get Help \U0001F6C4")
-        # FBAttachment.quick_reply("Make Booking \U0001F5A5")
+        FBAttachment.quick_reply("Check In \U0001F3AB"),
+        FBAttachment.quick_reply("Flight Status \U0001F55B"),
+        FBAttachment.quick_reply("Baggage Info \U0001F6C4"),
+        FBAttachment.quick_reply("Make Booking \U0001F5A5")
     ])
 
 
@@ -86,7 +86,8 @@ def on_unlinked(sender, requestInfo):
 
 def on_message(sender, text, requestInfo):
     print("ON MESSAGE")
-    process_message(sender, text)
+    # process_message(sender, text)
+    facebook_handle_request(sender, text)
 
 
 def process_message(sender, text):

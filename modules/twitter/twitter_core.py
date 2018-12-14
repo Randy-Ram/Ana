@@ -19,7 +19,7 @@ def webhook_challenge(request):
                                   digestmod=hashlib.sha256).digest()
     # construct response data with base64 encoded hash
     response = {
-        'response_token': 'sha256=' + base64.b64encode(sha256_hash_digest).decode('ascii')
+        "response_token": "sha256=" + base64.b64encode(sha256_hash_digest).decode('ascii')
     }
 
     # returns properly formatted json response
@@ -32,6 +32,8 @@ def configure_bot():
 
 
 def send_dm(user_id, message_text):
+    print("SENDING DM: " + message_text)
+    print(user_id)
     event = {
         "event": {
             "type": "message_create",
@@ -47,6 +49,7 @@ def send_dm(user_id, message_text):
     }
 
     r = twt_bot.request('direct_messages/events/new', json.dumps(event))
+    pprint(r.json())
     return 'SUCCESS' if r.status_code == 200 else 'PROBLEM: ' + r.text
 
 
@@ -118,18 +121,19 @@ def get_webhooks():
     return r.json()
 
 
-def add_subscription():
-    r = twt_bot.request('account_activity/all/:%s/subscriptions' % ENV_NAME, method_override="POST")
+def add_subscription(twt_bot2):
+    r = twt_bot2.request('account_activity/all/:%s/subscriptions' % ENV_NAME, method_override="POST")
     pprint(r.response.status_code)
 
 
-def get_subscriptions():
-    r = twt_bot.request('account_activity/all/:%s/subscriptions/all/list' % ENV_NAME)
+def get_all_subscriptions():
+    # r = twt_bot.request('account_activity/all/:%s/subscriptions/all/list' % ENV_NAME)
+    r = twt_bot.request('account_activity/all/:%s/subscriptions/list' % ENV_NAME,  method_override='GET')
     print(r.json())
 
 
-def trigger_crc():
-    r = twt_bot.request("account_activity/all/:%s/webhooks/:%s" % (ENV_NAME, "1055127917909475329"),
+def trigger_crc(webhook_id):
+    r = twt_bot.request("account_activity/all/:%s/webhooks/:%s" % (ENV_NAME, webhook_id),
                         method_override="PUT")
     pprint(r.response.status_code)
 
@@ -207,12 +211,15 @@ def send_options(sender_id, options):
 
 
 def change_endpoints(new_endpoint):
+    twt_bot2 = TwitterAPI(twitter_consumer_key, twitter_consumer_secret, twitter_access_token,
+                          twitter_access_token_secret, auth_type='oAuth2')
     current_webhooks = get_webhooks()
     if 'environments' in current_webhooks:
         curr_id = current_webhooks['environments'][0]['webhooks'][0]['id']
-        r = twt_bot.request("account_activity/all/:%s/webhooks/:%s" % (ENV_NAME, curr_id))
+        r = twt_bot2.request("account_activity/all/:%s/webhooks/:%s" % (ENV_NAME, curr_id))
         print(f"Status {r.status_code}")
         create_webhook(new_endpoint)
+        add_subscription(twt_bot2)
 
 
 def send_text_with_buttons(sender_id, text, btn_info):
@@ -259,20 +266,28 @@ def send_text_with_buttons(sender_id, text, btn_info):
 
 if __name__ == "__main__":
     # tweet()
-    # send_dm()
+    send_dm('1053316284375539712', "Hello")
     # get_user_id()
     # send_options()
     # create_welcome_message()
-    # create_webhook()
+    # create_webhook("https://rram.ngrok.io/twitter")
     # delete_welcome_message("1055843962479620100")  #1055843962479620100
     # get_welcome_messages()
     # get_welcome_message_by_id("1055844711917862917")
     # set_welcome_message_rules('1055844711917862917')
     # get_welcome_message_rules()
     # pprint(get_webhooks())
-    # change_endpoints("https://efdd6f0a.ngrok.io/twitter")
-    # print(get_webhooks())
-    # add_subscription()
-    # get_subscriptions()
-    # trigger_crc()
-    get_user_id_from_screen_name("iflycaribbean")  # 243654400
+    # change_endpoints("https://rram.ngrok.io/twitter")
+    # pprint(get_webhooks())
+    # get_all_subscriptions()
+    # trigger_crc("1060954069236375553")
+    # get_user_id_from_screen_name("HyperManTT")  # 243654400
+    """
+    Changing webhooks involves the following:
+    - Run change_endpoint function
+    - Run get_webhooks to see new webhook id
+    - trigger CRC with new webhook id
+    - Add subscription
+    - View added subscription
+    
+    """
