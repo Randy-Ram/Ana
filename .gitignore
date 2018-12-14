@@ -1,6 +1,10 @@
 venv
+venv2/
 .idea
 config.py
 __pycache__
 *.json
 *.env
+*.flac
+*.wav
+.flaskenv

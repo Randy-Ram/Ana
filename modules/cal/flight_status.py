@@ -86,6 +86,8 @@ def fetch_flight_status(df_request):
                 flight_status = flight_resp["flight_status"]
                 formatted_arr_date = format_datetime(flight_resp['arr_time_local'])
                 formatted_dept_date = format_datetime(flight_resp['dept_time_local'])
+                formatted_std = format_datetime(flight_resp['std_local'])
+                formatted_sta = format_datetime(flight_resp['sta_local'])
                 # Get the date only from the Flight Status endpoint response to compare
                 arr_date_only = datetime.datetime.strptime(flight_resp['arr_time_local'], "%Y-%m-%dT%H:%M:%S").date()
                 dept_date_only = datetime.datetime.strptime(flight_resp['dept_time_local'], "%Y-%m-%dT%H:%M:%S").date()
@@ -93,7 +95,10 @@ def fetch_flight_status(df_request):
                     continue
                 if flight_status in ("Cancelled", "Delayed"):
                     flight_status = "cancellation" if flight_status == "Cancelled" else "delay"
-                    response_dict['response_list'].append({'flight_status': flight_status, "msg": '', 'api_response': flight_resp})
+                    msg = f'Unfortunately {flight_num} has suffered a {flight_status}. The estimated departure time ' \
+                          f'is {formatted_dept_date} ({flight_resp["dept_code"]} time) and the new estimated arrival' \
+                          f' time is {formatted_arr_date} ({flight_resp["arr_code"]} time).'
+                    response_dict['response_list'].append({'flight_status': flight_status, "msg": msg, 'api_response': flight_resp})
                     # fb_card = gen_fb_status_card(flight_resp, flight_status)
                     # fb_bot.send_message_TypeC(user_session, fb_card)
                 elif flight_status == "Scheduled":

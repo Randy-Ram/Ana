@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Response
+from threading import Thread
 # from tasks import make_celery
 import config
 import codecs
@@ -8,6 +9,7 @@ from modules.fb.handler_methods import *
 from modules.twitter.twitter_core import *
 from modules.twitter.twitter_bot import *
 from modules.whatsapp.whatsapp_bot import *
+from modules.slack.slack_bot import *
 import requests
 import dispatcher
 
@@ -95,6 +97,19 @@ def whatsapp_handler():
 def reg_twt_endpoint():
     resp = requests.post('https://www.twitter.com/all/development/webhooks.json?url=')
     print(resp.text)
+
+
+@app.route('/slack', methods=['GET', 'POST'])
+def slack_handler():
+    req = request.get_json()
+    if 'challenge' in req:
+        return req['challenge']
+    else:
+        # pprint(request.get_json())
+        # slack_handle_request(request.get_json())
+        thread = Thread(target=slack_handle_request, kwargs={'request': request.get_json()})
+        thread.start()
+    return jsonify({"ok": True}), 200
 
 
 if config.access_type == "test":

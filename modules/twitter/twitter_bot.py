@@ -171,6 +171,7 @@ def twitter_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         twitter_core.send_dm(session_id, response)
     else:
+        twitter_core.send_dm(session_id, "I'm sorry. This functionality is not available.")
         raise Exception(intent + ": Intent not supported")
 
 

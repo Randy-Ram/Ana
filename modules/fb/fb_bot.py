@@ -6,6 +6,7 @@ configure the logic of your bot
 import config
 from ..fb.fb_core import FBBot
 from modules.fb.helpers import persistent_menu
+from modules.fb.fb_faq import *
 from config import df_project_id
 from modules.helpers.helpers import *
 from modules.dialogflow import df
@@ -54,7 +55,7 @@ def handover_request(recipient_id, silent=False):
     response = fb_bot._send_payload(payload, pass_thread_endpoint)
 
 
-def facebook_flight_status(request, session_id):
+def facebook_flight_status(request=None, session_id=None):
     api_resp = flight_status.fetch_flight_status(request)
     pprint(api_resp)
     if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
@@ -68,6 +69,18 @@ intent_mapping = {
     "flight.status": facebook_flight_status
 }
 
+faq_mapping = {
+    "faq.baggage": faq_baggage,
+    "faq.dutyfree": faq_dutyfree,
+    "faq.special_requests": faq_special_requests,
+    "faq.miles_info": faq_miles,
+    "faq.checkin.online": faq_checkin_online,
+    "flight.checkin": faq_checkin_online,
+    "faq.cars": faq_rent_car,
+    "faq.reservations": faq_reservations,
+    "faq.contacts": faq_contacts,
+}
+
 
 def facebook_handle_df_request(request, session_id):
     if 'queryResult' in request and 'intent' in request['queryResult']:
@@ -77,6 +90,8 @@ def facebook_handle_df_request(request, session_id):
     # Use intent mapping dict to call function. All functions take the request and the session_id
     if intent in intent_mapping:
         intent_mapping[intent](request, session_id)
+    elif intent in faq_mapping:
+        faq_mapping[intent](fb_bot, session_id)
     elif intent in default_responses.responses:
         response = default_responses.responses[intent]
         fb_bot.send_text_message(recipient_id=session_id, text=response)

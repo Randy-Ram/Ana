@@ -55,6 +55,7 @@ def whatsapp_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         whatsapp_core.send_message(session_id, response)
     else:
+        whatsapp_core.send_message(session_id, "I'm sorry. This functionality is not available.")
         raise Exception(intent + ": Intent not supported")
 
 

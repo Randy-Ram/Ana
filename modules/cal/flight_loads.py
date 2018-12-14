@@ -36,15 +36,15 @@ def get_flight_loads(df_request):
             for each_flight in load_list:
                 response_str = f"*{each_flight['origin']} -> {each_flight['destination']}*\n"
                 for cabins, values in each_flight['cabins'].items():
-                    print(cabins, values)
+                    # print(cabins, values)
                     if 'J' in cabins:
-                        response_str += '*J Class*\n'
+                        response_str += '*Business Class*\n'
                         response_str += f"Available: {values['available']}\n"
                         response_str += f"Booked: {values['booked']}\n"
                         response_str += f"Booked Staff: {values['booked_staff']}\n"
                         response_str += f"Capacity: {values['capacity']}\n\n"
                     if 'Y' in cabins:
-                        response_str += '*Y Class*\n'
+                        response_str += '*Economy Class*\n'
                         response_str += f"Available: {values['available']}\n"
                         response_str += f"Booked: {values['booked']}\n"
                         response_str += f"Booked Staff: {values['booked_staff']}\n"
