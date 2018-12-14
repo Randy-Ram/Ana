@@ -4,6 +4,7 @@ from modules.helpers.helpers import *
 from modules.dialogflow import df
 from pprint import pprint
 from modules.cal import flight_status, default_responses, flight_loads
+from time import sleep
 
 """
 {'AccountSid': 'ACca18028c19aa159322f34a632f8e2082',
@@ -25,6 +26,7 @@ def whatsapp_flight_status(request, session_id):
     pprint(api_resp)
     if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
         whatsapp_core.send_message(session_id, api_resp["preamble"])
+        sleep(1)
     for each_flight in api_resp["response_list"]:
             whatsapp_core.send_message(session_id, each_flight['msg'])
 

@@ -4,6 +4,7 @@ from modules.helpers.helpers import *
 from modules.cal import flight_status, default_responses
 from pprint import pprint
 from config import df_project_id
+from time import sleep
 
 """
 {'direct_message_events': [{'created_timestamp': '1540561880170',
@@ -76,6 +77,7 @@ def twitter_get_flight_status(request, session_id):
     api_resp = flight_status.fetch_flight_status(request)
     if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
         twitter_core.send_dm(session_id, api_resp["preamble"])
+        sleep(1)
     for each_flight in api_resp["response_list"]:
             twitter_core.send_dm(session_id, each_flight['msg'])
 

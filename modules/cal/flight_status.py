@@ -70,11 +70,12 @@ def fetch_flight_status(df_request):
         # flight_resp = response_generator(date, flight_num)
         day_of_date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").date()
         flight_info = get_flight_info(flight_num, date)  # GET FLIGHT INFO FROM API
-        if len(flight_info.keys()) > 1:
-            response_dict['preamble'] = "It seems there were more than one flight {flight_num} on {dept_date}".format(
-                flight_num=flight_num,
-                dept_date=day_of_date
-            )
+        # if len(flight_info.keys()) > 1:
+        #     response_dict['preamble'] = "It seems there were more than one flight {flight_num} on {dept_date}. " \
+        #                                 "This is usually because of overnight flights".format(
+        #         flight_num=flight_num,
+        #         dept_date=day_of_date
+        #     )
         if len(flight_info) == 0:
             response_dict['preamble'] = "I'm not seeing any flights for {flight_num} scheduled for {dept_date}".format(
                 flight_num=flight_num,
@@ -85,6 +86,11 @@ def fetch_flight_status(df_request):
                 flight_status = flight_resp["flight_status"]
                 formatted_arr_date = format_datetime(flight_resp['arr_time_local'])
                 formatted_dept_date = format_datetime(flight_resp['dept_time_local'])
+                # Get the date only from the Flight Status endpoint response to compare
+                arr_date_only = datetime.datetime.strptime(flight_resp['arr_time_local'], "%Y-%m-%dT%H:%M:%S").date()
+                dept_date_only = datetime.datetime.strptime(flight_resp['dept_time_local'], "%Y-%m-%dT%H:%M:%S").date()
+                if arr_date_only != day_of_date and dept_date_only != day_of_date:
+                    continue
                 if flight_status in ("Cancelled", "Delayed"):
                     flight_status = "cancellation" if flight_status == "Cancelled" else "delay"
                     response_dict['response_list'].append({'flight_status': flight_status, "msg": '', 'api_response': flight_resp})
@@ -131,6 +137,12 @@ def fetch_flight_status(df_request):
                     response_dict['response_list'].append({'flight_status': "error", "msg": "Sorry, I can't seem to "
                                                                                             "find any information for "
                                                                                             "that flight."})
+        if len(response_dict['response_list']) > 1:
+            response_dict['preamble'] = "It seems there were more than one flight {flight_num} on {dept_date}. " \
+                                        "This is usually because of overnight flights".format(
+                flight_num=flight_num,
+                dept_date=day_of_date
+            )
     except KeyError:
         print(traceback.print_exc())
         response_dict['response_list'].append(
