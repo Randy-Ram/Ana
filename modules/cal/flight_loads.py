@@ -3,9 +3,7 @@ import datetime
 import traceback
 import json
 from pprint import pprint
-
-
-flight_loads_endpoint = 'https://api.caribbean-airlines.com/amadeus/flight_loads/'
+from config import flight_loads_endpoint
 
 
 def make_flight_loads_req(dept_date, flight_number, access_code, airline_code):
@@ -55,6 +53,42 @@ def get_flight_loads(df_request):
             if 'message' in flight_loads:
                 return ['Sorry. I got this error: ' + flight_loads['message']]
             return ["Error handling request."]
+    except Exception as err:
+        import traceback
+        print(traceback.print_exc())
+        print(err)
+
+
+def get_flight_loads_command(date, flight_num):
+    response_list = []
+    try:
+        access_code = datetime.datetime.now().strftime("%A").lower()
+        date = datetime.datetime.strptime(date, "%Y%m%d").date().strftime("%d%m%y")
+        flight_loads = make_flight_loads_req(date, flight_num, access_code, "BW")
+        if 'status' in flight_loads and flight_loads['status'] is True:
+            load_list = flight_loads['loads']
+            for each_flight in load_list:
+                response_str = f"*{each_flight['origin']} -> {each_flight['destination']}*\n"
+                for cabins, values in each_flight['cabins'].items():
+                    # print(cabins, values)
+                    if 'J' in cabins:
+                        response_str += '*Business Class*\n'
+                        response_str += f"Available: {values['available']}\n"
+                        response_str += f"Booked: {values['booked']}\n"
+                        response_str += f"Booked Staff: {values['booked_staff']}\n"
+                        response_str += f"Capacity: {values['capacity']}\n\n"
+                    if 'Y' in cabins:
+                        response_str += '*Economy Class*\n'
+                        response_str += f"Available: {values['available']}\n"
+                        response_str += f"Booked: {values['booked']}\n"
+                        response_str += f"Booked Staff: {values['booked_staff']}\n"
+                        response_str += f"Capacity: {values['capacity']}\n"
+                response_list.append(response_str)
+            return "\n\n".join(response_list)
+        else:
+            if 'message' in flight_loads:
+                return 'Sorry. I got this error: ' + flight_loads['message']
+            return "Error handling request."
     except Exception as err:
         import traceback
         print(traceback.print_exc())

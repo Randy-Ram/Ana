@@ -10,7 +10,9 @@ from modules.twitter.twitter_core import *
 from modules.twitter.twitter_bot import *
 from modules.whatsapp.whatsapp_bot import *
 from modules.slack.slack_bot import *
+from modules.slack.slack_dispatcher import dispatch_slack_action
 import requests
+import random
 import dispatcher
 
 
@@ -99,14 +101,21 @@ def reg_twt_endpoint():
     print(resp.text)
 
 
+@app.route('/slack_slash_commands', methods=['GET', 'POST'])
+def slack_slash_handler():
+    responses = ["Getting that for you", "One sec...", "Fetching response...", "Acquiring data..."]
+    pprint(request.form)
+    thread = Thread(target=dispatch_slack_action, kwargs={'slack_request': request.form})
+    thread.start()
+    return random.choice(responses), 200
+
+
 @app.route('/slack', methods=['GET', 'POST'])
 def slack_handler():
     req = request.get_json()
     if 'challenge' in req:
         return req['challenge']
     else:
-        # pprint(request.get_json())
-        # slack_handle_request(request.get_json())
         thread = Thread(target=slack_handle_request, kwargs={'request': request.get_json()})
         thread.start()
     return jsonify({"ok": True}), 200

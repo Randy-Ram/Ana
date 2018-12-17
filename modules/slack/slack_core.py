@@ -1,6 +1,5 @@
 import requests
-slack_msg_url = 'https://slack.com/api/chat.postMessage'
-slack_token = "xoxb-392754862868-504115483058-FNqBktO5XNQrjVTsb4kdfYbt"
+from config import slack_token, slack_msg_url
 
 
 def send_message(channel, message):
@@ -21,5 +20,19 @@ def send_message(channel, message):
     print(resp.text)
 
 
+def send_response_to_slash_command(response_url, text):
+    """
+    Method to respond to commands invoked in Slack via a slash "/flist"
+    :param response_url: The URL to send the response too
+    :param text: The text to send.
+    :return:
+    """
+    text = {
+        "text": text
+    }
+    resp = requests.post(response_url, json=text)
+    print(resp.text)
+
+
 if __name__ == "__main__":
-    send_slack_message("Hello Randy", "CEU39H3H8")
+    send_message("Hello Randy", "CEU39H3H8")
