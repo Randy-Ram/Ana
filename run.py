@@ -121,5 +121,5 @@ def slack_handler():
     return jsonify({"ok": True}), 200
 
 
-if config.access_type == "test":
+if config.access_type == "test" and __name__ == "__main__":
     app.run(host='0.0.0.0', port='5000', debug=True)
