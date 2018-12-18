@@ -29,7 +29,8 @@ def handle_staff_flight_list(response_url, text):
         pprint(resp)
         send_response_to_slash_command(response_url, resp)
     except ValueError:
-        send_response_to_slash_command(response_url, "Sorry, please ensure you have the correct number of parameters")
+        send_response_to_slash_command(response_url, "Improper command usage. Please ensure you use the command like: "
+                                                     "*/flist 20181217 POS SLU 434*")
 
 
 def handle_flight_load(response_url, text):
@@ -39,7 +40,8 @@ def handle_flight_load(response_url, text):
         pprint(resp)
         send_response_to_slash_command(response_url, resp)
     except ValueError:
-        send_response_to_slash_command(response_url, "Sorry, please ensure you have the correct number of parameters")
+        send_response_to_slash_command(response_url, "Improper command usage. Please ensure you use the command like:"
+                                                     "*/fload 20181228 525*")
 
 
 def dispatch_slack_action(slack_request):
