@@ -1,6 +1,8 @@
 import base64
 import hashlib
 import hmac
+import sys
+sys.path.append("...")
 from config import twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret
 from TwitterAPI import TwitterAPI
 import json
@@ -279,11 +281,11 @@ if __name__ == "__main__":
     # get_welcome_message_by_id("1055844711917862917")
     # set_welcome_message_rules('1055844711917862917')
     # get_welcome_message_rules()
-    # pprint(get_webhooks())
+    pprint(get_webhooks())
     # change_endpoints("https://rram.ngrok.io/twitter")
     #  pprint(get_webhooks())
-    add_subscription()
-    get_all_subscriptions()
+    # add_subscription()
+    # get_all_subscriptions()
     # trigger_crc("1073660905299329032")
     # get_user_id_from_screen_name("HyperManTT")  # 243654400
     """
