@@ -78,7 +78,7 @@ def twitter_handler():
         print("CRC Check")
         return webhook_challenge(request)
     else:
-        pprint(request.get_json())
+        # pprint(request.get_json())
         req = request.get_json()
         if "apps" not in req and "direct_message_events" in req:
             # send_options()

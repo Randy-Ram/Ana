@@ -6,6 +6,7 @@ from TwitterAPI import TwitterAPI
 import json
 from pprint import pprint
 
+# python3 -m modules.twitter.twitter_core
 
 twt_bot = TwitterAPI(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret)
 
@@ -273,17 +274,17 @@ if __name__ == "__main__":
     # get_user_id()
     # send_options()
     # create_welcome_message()
-    # create_webhook("https://rram.ngrok.io/twitter")
+    # create_webhook("https://bot.caribbean-airlines.com/twitter")
     # delete_welcome_message("1055843962479620100")  #1055843962479620100
     # get_welcome_messages()
     # get_welcome_message_by_id("1055844711917862917")
     # set_welcome_message_rules('1055844711917862917')
     # get_welcome_message_rules()
+    # pprint(get_webhooks())
+    change_endpoints("https://bot.caribbean-airlines.com/twitter")
     pprint(get_webhooks())
-    # change_endpoints("https://rram.ngrok.io/twitter")
-    #  pprint(get_webhooks())
-    # add_subscription()
-    # get_all_subscriptions()
+    add_subscription()
+    get_all_subscriptions()
     # trigger_crc("1073660905299329032")
     # get_user_id_from_screen_name("HyperManTT")  # 243654400
     """
