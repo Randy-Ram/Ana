@@ -1,5 +1,5 @@
 from modules.whatsapp import whatsapp_core
-from config import df_project_id
+from modules.config import df_project_id
 from modules.helpers.helpers import *
 from modules.dialogflow import df
 from pprint import pprint

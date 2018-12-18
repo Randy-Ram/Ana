@@ -1,8 +1,7 @@
 import requests
 import datetime
 import traceback
-import json
-from config import flight_info_endpoint, cal_api_get_token, cal_api_check_token, app_id, app_key
+from modules.config import flight_info_endpoint, cal_api_get_token, app_id, app_key
 from pprint import pprint
 
 payload = {

@@ -1,10 +1,8 @@
 from flask import Flask, request, jsonify, Response
 from threading import Thread
 # from tasks import make_celery
-import config
-import codecs
+from modules import config
 from functools import wraps
-from modules.fb.fb_bot import configure_bot
 from modules.fb.handler_methods import *
 from modules.twitter.twitter_core import *
 from modules.twitter.twitter_bot import *

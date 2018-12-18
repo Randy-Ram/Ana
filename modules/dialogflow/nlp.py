@@ -1,9 +1,7 @@
 import os
 import sys
-import config
-from pprint import pprint
+from modules import config
 import json
-import config
 
 try:
     import apiai

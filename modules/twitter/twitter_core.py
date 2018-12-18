@@ -1,9 +1,7 @@
 import base64
 import hashlib
 import hmac
-import sys
-sys.path.append("...")
-from config import twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret
+from modules.config import twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret
 from TwitterAPI import TwitterAPI
 import json
 from pprint import pprint

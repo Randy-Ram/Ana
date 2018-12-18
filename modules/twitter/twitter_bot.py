@@ -3,7 +3,7 @@ from modules.dialogflow import df
 from modules.helpers.helpers import *
 from modules.cal import flight_status, default_responses
 from pprint import pprint
-from config import df_project_id
+from modules.config import df_project_id
 from time import sleep
 
 """

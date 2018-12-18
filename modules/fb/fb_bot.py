@@ -3,15 +3,15 @@ If you're implementing a bot, this is the file that you would
 configure the logic of your bot
 """
 
-import config
+from modules import config
 from ..fb.fb_core import FBBot
 from modules.fb.helpers import persistent_menu
 from modules.fb.fb_faq import *
-from config import df_project_id
+from modules.config import df_project_id
 from modules.helpers.helpers import *
 from modules.dialogflow import df
 from pprint import pprint
-from modules.cal import flight_status, default_responses, flight_loads
+from modules.cal import flight_status, default_responses
 from time import sleep
 
 

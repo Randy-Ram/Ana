@@ -1,9 +1,7 @@
 import requests
 import datetime
-import traceback
-import json
 from pprint import pprint
-from config import flight_loads_endpoint
+from modules.config import flight_loads_endpoint
 
 
 def make_flight_loads_req(dept_date, flight_number, access_code, airline_code):

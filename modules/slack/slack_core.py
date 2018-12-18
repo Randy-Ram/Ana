@@ -1,5 +1,5 @@
 import requests
-from config import slack_token, slack_msg_url
+from modules.config import slack_token, slack_msg_url
 
 
 def send_message(channel, message):
