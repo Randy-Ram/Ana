@@ -5,6 +5,7 @@ Dispatcher for slack slash commands
 from modules.slack.slack_core import send_response_to_slash_command
 from modules.cal.flight_staff_listing import get_flight_staff_listing
 from modules.cal.flight_loads import get_flight_loads_command
+from modules.cal.flight_schedule import get_flight_schedule
 from pprint import pprint
 
 """
@@ -44,6 +45,17 @@ def handle_flight_load(response_url, text):
                                                      "*/fload 20181228 525*")
 
 
+def handle_flight_schedule(response_url, text):
+    try:
+        date, dept_city, arrv_city, connections = text.strip().split()
+        resp = get_flight_schedule(date, dept_city, arrv_city, connections)
+        pprint(resp)
+        send_response_to_slash_command(response_url, resp)
+    except ValueError:
+        send_response_to_slash_command(response_url, "Improper command usage. Please ensure you use the command like:"
+                                                     "*/fsched 20181228 POS JFK 0*")
+
+
 def dispatch_slack_action(slack_request):
     command = slack_request['command']
     response_url = slack_request['response_url']
@@ -52,3 +64,5 @@ def dispatch_slack_action(slack_request):
         handle_staff_flight_list(response_url, text)
     elif command == "/fload":
         handle_flight_load(response_url, text)
+    elif command == "/fsched":
+        handle_flight_schedule(response_url, text)
