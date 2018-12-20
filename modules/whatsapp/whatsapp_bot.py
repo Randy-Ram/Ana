@@ -6,6 +6,7 @@ from pprint import pprint
 from modules.cal import flight_status, default_responses, flight_loads
 from time import sleep
 from modules.logger import log_request
+from threading import Thread
 
 """
 {'AccountSid': 'ACca18028c19aa159322f34a632f8e2082',
@@ -72,4 +73,6 @@ def whatsapp_handle_request(request):
         whatsapp_core.send_message(sender_id, text_to_send)
         # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
     if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
-        log_request(ai_json_response)
+        # log_request(ai_json_response)
+        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response})
+        thread.start()

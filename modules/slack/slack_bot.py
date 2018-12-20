@@ -6,7 +6,7 @@ from modules.cal import flight_status, default_responses, flight_loads
 from modules.slack import slack_core
 from time import sleep
 from modules.logger import log_request
-from functools import wraps
+from threading import Thread
 
 '''
 {'api_app_id': 'AEVF2N5EJ',
@@ -84,4 +84,6 @@ def slack_handle_request(request):
         text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
         slack_core.send_message(sender_id, text_to_send)
     if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
-        log_request(ai_json_response)
+        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response})
+        thread.start()
+        # log_request(ai_json_response)

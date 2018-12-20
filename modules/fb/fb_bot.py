@@ -14,6 +14,7 @@ from pprint import pprint
 from modules.cal import flight_status, default_responses
 from time import sleep
 from modules.logger import log_request
+from threading import Thread
 
 
 token = config.facebook_access_token
@@ -111,7 +112,9 @@ def facebook_handle_request(sender, text):
             display_sender_action("typing_off", sender)
             fb_bot.send_text_message(recipient_id=sender, text=text_to_send)
         if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
-            log_request(ai_json_response)
+            # log_request(ai_json_response)
+            thread = Thread(target=log_request, kwargs={'df_response': ai_json_response})
+            thread.start()
     except Exception:
         # handover_request(sender)
         print("Error")
