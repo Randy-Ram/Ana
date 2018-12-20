@@ -5,6 +5,7 @@ from modules.cal import flight_status, default_responses
 from pprint import pprint
 from modules.config import df_project_id
 from time import sleep
+from modules.logger import log_request
 
 """
 {'direct_message_events': [{'created_timestamp': '1540561880170',
@@ -191,3 +192,5 @@ def twitter_handle_user_request(request):
         text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
         twitter_core.send_dm(sender_id, text_to_send)
         # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
+    if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
+        log_request(ai_json_response)

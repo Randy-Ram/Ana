@@ -5,6 +5,7 @@ from modules.dialogflow import df
 from pprint import pprint
 from modules.cal import flight_status, default_responses, flight_loads
 from time import sleep
+from modules.logger import log_request
 
 """
 {'AccountSid': 'ACca18028c19aa159322f34a632f8e2082',
@@ -70,3 +71,5 @@ def whatsapp_handle_request(request):
         text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
         whatsapp_core.send_message(sender_id, text_to_send)
         # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
+    if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
+        log_request(ai_json_response)

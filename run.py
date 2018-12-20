@@ -35,6 +35,11 @@ def authenticate():
 
 
 def requires_auth(f):
+    """
+    Decorating function to check for auth.
+    :param f:
+    :return:
+    """
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization

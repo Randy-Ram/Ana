@@ -5,6 +5,14 @@ from modules.config import flight_loads_endpoint
 
 
 def make_flight_loads_req(dept_date, flight_number, access_code, airline_code):
+    """
+    Function that makes the request to api.caribbean-airlines to get the flight loads
+    :param dept_date: Departure Date
+    :param flight_number: Flight Number
+    :param access_code: Access Code to access endpoint
+    :param airline_code: "BW" for Caribbean Airlines
+    :return:
+    """
     if "BW" in flight_number:
         flight_number = flight_number.replace("BW", "").strip()
 
@@ -20,6 +28,11 @@ def make_flight_loads_req(dept_date, flight_number, access_code, airline_code):
 
 
 def get_flight_loads(df_request):
+    """
+    Handles the request from DialogFlow for getting flight loads
+    :param df_request: The DialogFlow request
+    :return: Text string representing the flight load response
+    """
     try:
         response_list = []
         date = df_request['queryResult']['parameters']['date']

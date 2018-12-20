@@ -1,3 +1,8 @@
+"""
+The below contains the default responses for Ana. If the intent does not match in the specific handler, it checks
+the default responses to see if the intent is specified there.
+"""
+
 responses = {
     "faq.baggage": 'You can find info on our baggage policy here: https://www.caribbean-airlines.com/#/baggage',
     'faq.dutyfree': 'You can find info on your duty-free here: https://www.caribbean-airlines.com/#/caribbean-experience/duty-free',

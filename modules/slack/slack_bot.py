@@ -5,6 +5,8 @@ from pprint import pprint
 from modules.cal import flight_status, default_responses, flight_loads
 from modules.slack import slack_core
 from time import sleep
+from modules.logger import log_request
+from functools import wraps
 
 '''
 {'api_app_id': 'AEVF2N5EJ',
@@ -49,9 +51,10 @@ intent_mapping = {
 
 def slack_handle_df_request(request, session_id):
     if 'queryResult' in request and 'intentDetectionConfidence' in request['queryResult']:
-        if request['queryResult']['intentDetectionConfidence'] < 0.75:
+        if request['queryResult']['intentDetectionConfidence'] < 0.60:
             slack_core.send_message(session_id, "I'm sorry, your request is vague. "
                                                 "Can you please be more specific about what you want?")
+            # log_request(request)
             return
     if 'queryResult' in request and 'intent' in request['queryResult']:
         intent = request['queryResult']['intent']['displayName']
@@ -68,7 +71,7 @@ def slack_handle_df_request(request, session_id):
 
 
 def slack_handle_request(request):
-    pprint(request)
+    # pprint(request)
     text = request['event']['text']
     if '<@UEU3DE71Q>' in text:
         text = text.replace('<@UEU3DE71Q>', '')
@@ -80,3 +83,5 @@ def slack_handle_request(request):
     if 'fulfillmentText' in ai_json_response:
         text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
         slack_core.send_message(sender_id, text_to_send)
+    if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
+        log_request(ai_json_response)
