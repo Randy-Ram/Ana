@@ -1,19 +1,18 @@
 from twilio.rest import Client
-import twilio
+from modules.config import whatsapp_account_sid, whatsapp_auth_token, whatspp_acc_num
+from modules.whatsapp.whatsapp_strings import WHATSAPP_ERROR_MSG_BODY
 
-account_sid = 'ACca18028c19aa159322f34a632f8e2082'
-auth_token = 'fa9f053a869cba6cba2d96cda10d79d9'
-whatspp_acc_num = 'whatsapp:+14155238886'
-
-client = Client(account_sid, auth_token)
+client = Client(whatsapp_account_sid, whatsapp_auth_token)
 
 
 def send_message(to_num, message):
     try:
         if not message:
-            body = "Sorry but it seems I'm having some issues at the moment."
+            body = WHATSAPP_ERROR_MSG_BODY
+        else:
+            body = message
         msg = client.messages.create(
-                                      body=message,
+                                      body=body,
                                       from_=whatspp_acc_num,
                                       to=to_num
                                   )

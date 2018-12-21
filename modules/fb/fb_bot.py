@@ -15,6 +15,7 @@ from modules.cal import flight_status, default_responses
 from time import sleep
 from modules.logger import log_request
 from threading import Thread
+from modules.fb.fb_strings import *
 
 
 token = config.facebook_access_token
@@ -48,7 +49,7 @@ def configure_bot():
 def handover_request(recipient_id, silent=False):
     print("Handing over request to agent...")
     if not silent:
-        FBBot.send_text_message(recipient_id, "One sec, transferring you to an agent for assistance (Response times may vary).")
+        FBBot.send_text_message(recipient_id, FB_HANDOVER_REQ_MSG)
     pass_thread_endpoint = 'https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
     payload = {
         "recipient": {"id": recipient_id},
@@ -88,7 +89,7 @@ def facebook_handle_df_request(request, session_id):
     if 'queryResult' in request and 'intent' in request['queryResult']:
         intent = request['queryResult']['intent']['displayName']
     else:
-        raise Exception("Facebook DF handler needs a valid intent")
+        raise Exception(FB_DF_HANLDER_INVALID_INTENT)
     # Use intent mapping dict to call function. All functions take the request and the session_id
     if intent in intent_mapping:
         intent_mapping[intent](request, session_id)
@@ -98,7 +99,7 @@ def facebook_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         fb_bot.send_text_message(recipient_id=session_id, text=response)
     else:
-        raise Exception(intent + ": Intent not supported")
+        raise Exception(intent + FB_DF_INTENT_NOT_SUPPORTED)
 
 
 def facebook_handle_request(sender, text):

@@ -7,6 +7,7 @@ from modules.cal import flight_status, default_responses, flight_loads
 from time import sleep
 from modules.logger import log_request
 from threading import Thread
+from modules.whatsapp.whatsapp_strings import *
 
 """
 {'AccountSid': 'ACca18028c19aa159322f34a632f8e2082',
@@ -49,7 +50,7 @@ def whatsapp_handle_df_request(request, session_id):
     if 'queryResult' in request and 'intent' in request['queryResult']:
         intent = request['queryResult']['intent']['displayName']
     else:
-        raise Exception("Whatsapp DF handler needs a valid intent")
+        raise Exception(WHATSAPP_DF_EXCEPTION)
     # Use intent mapping dict to call function. All functions take the request and the session_id
     if intent in intent_mapping:
         intent_mapping[intent](request, session_id)
@@ -57,14 +58,14 @@ def whatsapp_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         whatsapp_core.send_message(session_id, response)
     else:
-        whatsapp_core.send_message(session_id, "I'm sorry. This functionality is not available.")
+        whatsapp_core.send_message(session_id, WHATSAPP_NO_FUNCTIONALITY)
         raise Exception(intent + ": Intent not supported")
 
 
 def whatsapp_handle_request(request):
     text = request['Body']
     sender_id = request['From']
-    df_sender_id = 'whatsapp_' + sender_id
+    df_sender_id = DF_SENDER_ID + sender_id
     ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")
     pprint(ai_json_response)
     # text_to_send = remove_escaped_characters(ai_json_response["result"]["fulfillment"]["speech"])

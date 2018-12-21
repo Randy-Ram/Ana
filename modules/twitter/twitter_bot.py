@@ -7,6 +7,7 @@ from modules.config import df_project_id
 from time import sleep
 from modules.logger import log_request
 from threading import Thread
+from modules.twitter.twitter_strings import *
 
 """
 {'direct_message_events': [{'created_timestamp': '1540561880170',
@@ -97,7 +98,7 @@ def twitter_dutyfree(request, session_id):
                         "url": "https://www.caribbean-airlines.com/#/caribbean-experience/duty-free"
                     }
                 ]
-    twitter_core.send_text_with_buttons(session_id, "Here you go...", btn_info)
+    twitter_core.send_text_with_buttons(session_id, TWITTER_DUTY_FREE_MSG, btn_info)
 
 
 def twitter_miles(request, session_id):
@@ -113,7 +114,7 @@ def twitter_miles(request, session_id):
             "url": "https://www.caribbean-airlines.com/#/loyalty-programmes/caribbean-miles"
         }
     ]
-    twitter_core.send_text_with_buttons(session_id, "Here some useful links regarding Caribbean Miles", btn_info)
+    twitter_core.send_text_with_buttons(session_id, TWITTER_CAL_MILES_MSG, btn_info)
 
 
 def twitter_checkin(request, session_id):
@@ -124,7 +125,7 @@ def twitter_checkin(request, session_id):
             "url": "https://checkin.si.amadeus.net/1ASIHSSCWEBBW/sscwbw/checkin"
         }
     ]
-    twitter_core.send_text_with_buttons(session_id, "You can click below to checkin online", btn_info)
+    twitter_core.send_text_with_buttons(session_id, TWITTER_CHECKIN_MSG, btn_info)
 
 
 def twitter_cars(request, session_id):
@@ -132,10 +133,10 @@ def twitter_cars(request, session_id):
         {
             "type": "web_url",
             "label": "Rent a Car",
-            "url": "http://cars.cartrawler.com/caribbeanairlines"
+            "url": "https://cars.cartrawler.com/caribbeanairlines"
         }
     ]
-    twitter_core.send_text_with_buttons(session_id, "We offer car rentals!", btn_info)
+    twitter_core.send_text_with_buttons(session_id, TWITTER_CAR_RENTAL_MSG, btn_info)
 
 
 def twitter_hotels(request, session_id):
@@ -146,7 +147,7 @@ def twitter_hotels(request, session_id):
             "url": "http://hotels.caribbean-airlines.com"
         }
     ]
-    twitter_core.send_text_with_buttons(session_id, "We offer hotel bookings", btn_info)
+    twitter_core.send_text_with_buttons(session_id, TWITTER_HOTEL_MSG, btn_info)
 
 
 # The POSITION OF THIS dict MATTERS - BEFORE twitter_handle_df_request and AFTER other functions
@@ -173,8 +174,8 @@ def twitter_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         twitter_core.send_dm(session_id, response)
     else:
-        twitter_core.send_dm(session_id, "I'm sorry. This functionality is not available.")
-        raise Exception(intent + ": Intent not supported")
+        twitter_core.send_dm(session_id, TWITTER_DF_NO_FUNCTIONALITY)
+        raise Exception(intent + TWITTER_INTENT_NOT_SUPPORTED)
 
 
 def twitter_handle_user_request(request):
