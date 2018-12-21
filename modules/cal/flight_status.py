@@ -137,6 +137,10 @@ def fetch_flight_status(df_request):
                     )
                     response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
                     # fb_bot.send_text_message(user_session, msg)
+                elif flight_status == "Landed":
+                    msg = f"{flight_num} has just landed in {flight_resp['arr_city']}. It arrived at " \
+                          f"{formatted_arr_date} ({flight_resp['arr_code']} time.)"
+                    response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
                 else:
                     response_dict['response_list'].append({'flight_status': "error", "msg": "Sorry, I can't seem to "
                                                                                             "find any information for "
