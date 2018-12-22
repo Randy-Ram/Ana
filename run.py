@@ -104,7 +104,7 @@ def reg_twt_endpoint():
     print(resp.text)
 
 
-@app.route('/slack_slash_commands', methods=['GET', 'POST'])
+@app.route('/slack_slash_commands', methods=['POST'])
 def slack_slash_handler():
     responses = ["Getting that for you", "One sec...", "Fetching response...", "Acquiring data..."]
     pprint(request.form)
@@ -113,7 +113,7 @@ def slack_slash_handler():
     return random.choice(responses), 200
 
 
-@app.route('/slack', methods=['GET', 'POST'])
+@app.route('/slack', methods=['POST'])
 def slack_handler():
     req = request.get_json()
     if 'challenge' in req:
@@ -122,6 +122,11 @@ def slack_handler():
         thread = Thread(target=slack_handle_request, kwargs={'request': request.get_json()})
         thread.start()
     return jsonify({"ok": True}), 200
+
+
+@app.route('/slack_button_endpoint', methods=["POST"])
+def slack_button_endpoint():
+    return True
 
 
 if config.access_type == "test" and __name__ == "__main__":
