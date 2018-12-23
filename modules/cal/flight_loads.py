@@ -96,6 +96,7 @@ def get_flight_loads_command(date, flight_num):
                         response_str += f"Booked: {values['booked']}\n"
                         response_str += f"Booked Staff: {values['booked_staff']}\n"
                         response_str += f"Capacity: {values['capacity']}\n"
+                response_str += f"{'*'*40}\n"
                 response_list.append(response_str)
             return "\n\n".join(response_list)
         else:
