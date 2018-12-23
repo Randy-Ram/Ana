@@ -51,63 +51,36 @@ def send_response_to_slash_command(response_url, text):
 
 
 def send_test_response(slack_request):
-
     payload = {
-        "text": "Would you like to play a game?",
-        # "response_type": "in_channel",
-        "attachments": [
-            {
-                "text": "Choose a game to play",
-                "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
-                "color": "#3AA3E3",
-                "attachment_type": "default",
-                "callback_id": "game_selection",
-                "actions": [
-                    {
-                        "name": "games_list",
-                        "text": "Pick a game...",
-                        "type": "select",
-                        "options": [
-                            {
-                                "text": "Hearts",
-                                "value": "hearts"
-                            },
-                            {
-                                "text": "Bridge",
-                                "value": "bridge"
-                            },
-                            {
-                                "text": "Checkers",
-                                "value": "checkers"
-                            },
-                            {
-                                "text": "Chess",
-                                "value": "chess"
-                            },
-                            {
-                                "text": "Poker",
-                                "value": "poker"
-                            },
-                            {
-                                "text": "Falken's Maze",
-                                "value": "maze"
-                            },
-                            {
-                                "text": "Global Thermonuclear War",
-                                "value": "war"
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+            "attachments": [
+                {
+                    "actions": [
+                  {
+                    "name": 'fload',
+                    'text': 'Check flight load',
+                    'type': 'button',
+                    'value': '281218 526'
+                  }],
+             'attachment_type': 'default',
+             'callback_id': 'fload',
+             'fallback': 'Sorry, could not get the flight load. Try running /fload '
+                         'manually'
+                }],
+             'text': '*POS -> JFK*\n'
+                     '*BW526*\n'
+                     'Dept Time: Fri 28 Dec, 2018 03:15PM\n'
+                     'Arrv Time: Fri 28 Dec, 2018 10:25PM\n'
+                     '****************************************\n'
+                     '\n',
+            'channel': 'CEVKRDUET',
+            'user': 'UBJUR1S7L'
     }
-    channel = slack_request["channel_id"]
-    user_id = slack_request["user_id"]
-    payload["channel"] = channel
-    payload["user"] = user_id
-    send_ephemeral_msg(channel, user_id, None, payload=payload)
+    # channel = slack_request["channel_id"]
+    # user_id = slack_request["user_id"]
+    # payload["channel"] = channel
+    # payload["user"] = user_id
+    send_ephemeral_msg("CEVKRDUET", "UBJUR1S7L", None, payload=payload)
 
 
 if __name__ == "__main__":
-    send_message("Hello Randy", "CEU39H3H8")
+    send_test_response("Hello Randy")

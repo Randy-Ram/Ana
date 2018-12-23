@@ -74,12 +74,14 @@ def get_flight_loads_command(date, flight_num):
     response_list = []
     try:
         access_code = datetime.datetime.now().strftime("%A").lower()
+        date_to_send = datetime.datetime.strptime(date, "%Y%m%d").date().strftime("%a %d %b")
         date = datetime.datetime.strptime(date, "%Y%m%d").date().strftime("%d%m%y")
         flight_loads = make_flight_loads_req(date, flight_num, access_code, "BW")
         if 'status' in flight_loads and flight_loads['status'] is True:
             load_list = flight_loads['loads']
             for each_flight in load_list:
-                response_str = f"*{each_flight['origin']} -> {each_flight['destination']}*\n"
+                response_str = f"{'*'*40}\n*{each_flight['origin']} -> {each_flight['destination']}*\n"
+                response_str += f"*{date_to_send}*\n"
                 for cabins, values in each_flight['cabins'].items():
                     # print(cabins, values)
                     if 'J' in cabins:
