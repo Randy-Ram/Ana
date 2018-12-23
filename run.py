@@ -126,7 +126,11 @@ def slack_handler():
 
 @app.route('/slack_button_endpoint', methods=["POST"])
 def slack_button_endpoint():
-    return True
+    print("Dropdown pressed")
+    pprint(request.form)
+    # thread = Thread(target=dispatch_slack_action, kwargs={'slack_request': request.form})
+    # thread.start()
+    return "Good", 200
 
 
 if config.access_type == "test" and __name__ == "__main__":

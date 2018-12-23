@@ -2,7 +2,7 @@
 Dispatcher for slack slash commands
 """
 
-from modules.slack.slack_core import send_response_to_slash_command
+from modules.slack.slack_core import send_response_to_slash_command, send_test_response
 from modules.cal.flight_staff_listing import get_flight_staff_listing
 from modules.cal.flight_loads import get_flight_loads_command
 from modules.cal.flight_schedule import get_flight_schedule
@@ -66,3 +66,5 @@ def dispatch_slack_action(slack_request):
         handle_flight_load(response_url, text)
     elif command == "/fsched":
         handle_flight_schedule(response_url, text)
+    elif command == "/fltest":
+        send_test_response(slack_request)
