@@ -72,7 +72,7 @@ def dispatch_slack_action(slack_request):
     elif command == "/fload":
         handle_flight_load(response_url, text)
     elif command == "/fsched":
-        handle_flight_schedule(response_url, text)
+        handle_flight_schedule(response_url, text, channel_id, user_id)
     elif command == "/fltest":
         # send_test_response(slack_request)
         handle_flight_schedule(response_url, text, channel_id, user_id)
