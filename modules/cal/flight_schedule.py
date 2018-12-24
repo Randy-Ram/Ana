@@ -46,7 +46,7 @@ def get_flight_schedule(date, dept_city, arrv_city, max_connections):
         for flights in schedule['flights']:
             if len(flights) > int(max_connections) + 1:
                 continue
-            for index, each_flight in enumerate(flights):
+            for index, each_flight in enumerate(flights):  # Comment
                 if len(flights) == 1:  # Direct flight
                     resp_arr.append(f"*{each_flight['departure_city']} -> {each_flight['arrival_city']}*\n" \
                                     f"*BW{each_flight['flight_number']}*\n" \
