@@ -70,18 +70,22 @@ def get_flight_loads(df_request):
         print(err)
 
 
+def format_datetime(date_string):
+    return datetime.datetime.strptime(date_string, "%d%m%yT%H%M").strftime("%a %d %b %I:%M%p")
+
+
 def get_flight_loads_command(date, flight_num):
     response_list = []
     try:
         access_code = datetime.datetime.now().strftime("%A").lower()
-        date_to_send = datetime.datetime.strptime(date, "%Y%m%d").date().strftime("%a %d %b")
         date = datetime.datetime.strptime(date, "%Y%m%d").date().strftime("%d%m%y")
         flight_loads = make_flight_loads_req(date, flight_num, access_code, "BW")
         if 'status' in flight_loads and flight_loads['status'] is True:
             load_list = flight_loads['loads']
             for each_flight in load_list:
                 response_str = f"{'*'*40}\n*{each_flight['origin']} -> {each_flight['destination']}*\n"
-                response_str += f"*{date_to_send}*\n"
+                response_str += f"*Departure: {format_datetime(each_flight['departure_time'])}*\n"
+                response_str += f"*Arrival: {format_datetime(each_flight['arrival_time'])}*\n"
                 for cabins, values in each_flight['cabins'].items():
                     # print(cabins, values)
                     if 'J' in cabins:
