@@ -8,7 +8,7 @@ from modules.twitter.twitter_core import *
 from modules.twitter.twitter_bot import *
 from modules.whatsapp.whatsapp_bot import *
 from modules.slack.slack_bot import *
-from modules.slack.slack_dispatcher import dispatch_slack_action
+from modules.slack.slack_dispatcher import dispatch_slack_action, dispatch_slack_button_req
 import requests
 import random
 import dispatcher
@@ -126,7 +126,11 @@ def slack_handler():
 
 @app.route('/slack_button_endpoint', methods=["POST"])
 def slack_button_endpoint():
-    return True
+    responses = ["Getting that for you", "One sec...", "Fetching response...", "Acquiring data..."]
+    pprint(request.form)
+    thread = Thread(target=dispatch_slack_button_req, kwargs={'slack_btn_resp': request.form})
+    thread.start()
+    return random.choice(responses), 200
 
 
 if config.access_type == "test" and __name__ == "__main__":
