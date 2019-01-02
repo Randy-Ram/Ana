@@ -50,7 +50,10 @@ def handle_flight_load(response_url, text):
 def handle_flight_schedule(response_url, text, channel_id, user_id):
     try:
         date, dept_city, arrv_city, connections = text.strip().split()
-        resp_arr, attachment_arr = get_flight_schedule(date, dept_city, arrv_city, connections)
+        resp_arr, attachment_arr, resp_msg = get_flight_schedule(date, dept_city, arrv_city, connections)
+        if resp_arr is None and resp_msg is not None:
+            send_ephemeral_msg(channel_id, user_id, resp_msg)
+            return
         output_arr = create_flight_load_attachment_json(resp_arr, attachment_arr, channel_id, user_id)
         for responses in output_arr:
             # send_response_to_slash_command(response_url, responses)

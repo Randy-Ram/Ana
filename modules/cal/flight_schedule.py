@@ -73,7 +73,9 @@ def get_flight_schedule(date, dept_city, arrv_city, max_connections):
                                      f"Arrv Time: {format_datetime(each_leg['arrival_datetime'])}\n\n"
                         resp_arr.append(f"{flight_string}\n{local_msg}\n{'*' * 40}\n\n")
                         attachment_arr.append([date, each_leg['flight_number']])
-        return resp_arr, attachment_arr
+        return resp_arr, attachment_arr, None
+    elif 'status' in schedule and schedule['status'] is False:
+        return None, None, schedule['msg']
 
 
 if __name__ == "__main__":

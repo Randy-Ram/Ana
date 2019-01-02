@@ -2,6 +2,7 @@ import requests
 from modules.config import slack_token, slack_post_msg_url, slack_post_ephemeral_url
 from pprint import pprint
 
+
 def send_message(channel, message):
     """
 
