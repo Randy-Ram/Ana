@@ -48,9 +48,9 @@ def get_flight_schedule(date, dept_city, arrv_city, max_connections):
                 continue
             for index, each_flight in enumerate(flights):  # Comment
                 if len(flights) == 1:  # Direct flight
-                    resp_arr.append(f"*{each_flight['departure_city']} -> {each_flight['arrival_city']}*\n" \
-                                    f"*BW{each_flight['flight_number']}*\n" \
-                                    f"Dept Time: {format_datetime(each_flight['departure_datetime'])}\n" \
+                    resp_arr.append(f"*{each_flight['departure_city']} -> {each_flight['arrival_city']}*\n"
+                                    f"*BW{each_flight['flight_number']}*\n"
+                                    f"Dept Time: {format_datetime(each_flight['departure_datetime'])}\n"
                                     f"Arrv Time: {format_datetime(each_flight['arrival_datetime'])}\n{'*' * 40}\n\n"
                                     )
                     attachment_arr.append([date, each_flight['flight_number']])

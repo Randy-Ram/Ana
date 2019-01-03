@@ -67,6 +67,8 @@ def fetch_flight_status(df_request):
         date = df_request['queryResult']['parameters']['date']
         flight_num = df_request['queryResult']['parameters']['flight-number']
         # flight_resp = response_generator(date, flight_num)
+        if ":" == date[-3:-2]:
+            date = date[:-3] + date[-2:]
         day_of_date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").date()
         flight_info = get_flight_info(flight_num, date)  # GET FLIGHT INFO FROM API
         # if len(flight_info.keys()) > 1:
