@@ -1,7 +1,7 @@
 import requests
 import datetime
 import traceback
-from modules.config import flight_info_endpoint, cal_api_get_token, app_id, app_key
+from modules.config import flight_info_endpoint, cal_api_get_token, app_id, app_key, cert_path
 from pprint import pprint
 
 payload = {
@@ -12,7 +12,7 @@ payload = {
 
 def get_token():
     try:
-        r = requests.post(cal_api_get_token, json=payload, verify=False)
+        r = requests.post(cal_api_get_token, json=payload, verify=cert_path)
         resp = r.json()
         if resp['status'] is True:
             return resp['token']

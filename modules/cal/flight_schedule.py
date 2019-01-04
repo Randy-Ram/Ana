@@ -1,7 +1,7 @@
 import requests
 import datetime
 from pprint import pprint
-from modules.config import flight_schedule_endpoint
+from modules.config import flight_schedule_endpoint, cert_path
 from datetime import datetime
 
 """
@@ -26,7 +26,7 @@ def make_flight_schedule_req(dept_date, dept_city, arrv_city, access_code):
       "access_code": access_code
     }
     pprint(data)
-    resp = requests.post(flight_schedule_endpoint, json=data, verify=False)
+    resp = requests.post(flight_schedule_endpoint, json=data, verify=cert_path)
     pprint(resp.json())
     return resp.json()
 

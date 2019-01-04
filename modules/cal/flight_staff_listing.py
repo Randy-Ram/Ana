@@ -1,7 +1,7 @@
 import requests
 import datetime
 from pprint import pprint
-from modules.config import flight_staff_listing_endpoint
+from modules.config import flight_staff_listing_endpoint, cert_path
 
 
 """
@@ -27,7 +27,7 @@ def make_flight_listing_req(dept_date, flight_number, access_code, board_point, 
         "access_code": access_code
     }
     pprint(data)
-    resp = requests.post(flight_staff_listing_endpoint, json=data, verify=False)
+    resp = requests.post(flight_staff_listing_endpoint, json=data, verify=cert_path)
     pprint(resp.json())
     return resp.json()
 

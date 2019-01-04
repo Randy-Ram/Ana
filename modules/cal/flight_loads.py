@@ -1,7 +1,7 @@
 import requests
 import datetime
 from pprint import pprint
-from modules.config import flight_loads_endpoint
+from modules.config import flight_loads_endpoint, cert_path
 
 
 def make_flight_loads_req(dept_date, flight_number, access_code, airline_code):
@@ -22,7 +22,7 @@ def make_flight_loads_req(dept_date, flight_number, access_code, airline_code):
         "access_code": access_code,
         "airline_code": airline_code
     }
-    resp = requests.post(flight_loads_endpoint, json=data, verify=False)
+    resp = requests.post(flight_loads_endpoint, json=data, verify=cert_path)
     pprint(resp.json())
     return resp.json()
 
