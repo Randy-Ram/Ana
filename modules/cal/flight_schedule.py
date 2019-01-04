@@ -75,7 +75,7 @@ def get_flight_schedule(date, dept_city, arrv_city, max_connections):
                         attachment_arr.append([date, each_leg['flight_number']])
         return resp_arr, attachment_arr, None
     elif 'status' in schedule and schedule['status'] is False:
-        return None, None, schedule['msg']
+        return None, None, schedule['message']
 
 
 if __name__ == "__main__":
