@@ -188,6 +188,7 @@ def twitter_handle_user_request(request):
     sender_id = request['direct_message_events'][0]['message_create']['sender_id']
     df_sender_id = 'twitter_' + sender_id
     ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")
+    pprint("Printing response from Google")
     pprint(ai_json_response)
     # text_to_send = remove_escaped_characters(ai_json_response["result"]["fulfillment"]["speech"])
     if 'fulfillmentText' in ai_json_response:

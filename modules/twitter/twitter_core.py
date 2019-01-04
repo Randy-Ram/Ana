@@ -274,14 +274,15 @@ if __name__ == "__main__":
     # get_user_id()
     # send_options()
     # create_welcome_message()
-    # create_webhook("https://bot.caribbean-airlines.com/twitter")
+    create_webhook("https://bot.caribbean-airlines.com/twitter")
     # delete_welcome_message("1055843962479620100")  #1055843962479620100
     # get_welcome_messages()
     # get_welcome_message_by_id("1055844711917862917")
     # set_welcome_message_rules('1055844711917862917')
     # get_welcome_message_rules()
     # pprint(get_webhooks())
-    change_endpoints("https://bot.caribbean-airlines.com/twitter")
+
+    # change_endpoints("https://bot.caribbean-airlines.com/twitter")
     pprint(get_webhooks())
     add_subscription()
     get_all_subscriptions()

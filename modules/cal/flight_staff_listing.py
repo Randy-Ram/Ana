@@ -49,7 +49,7 @@ def get_flight_staff_listing(date, board_point, off_point, flight_num):
         flight_listing = make_flight_listing_req(date, flight_num, access_code, board_point, off_point)
         if 'status' in flight_listing and flight_listing['status'] is True:
             if len(flight_listing['pax']) == 0:
-                return "It seems there isn't any staff members on this flight."
+                return "It seems there aren't any staff members on this flight."
             pax_list = flight_listing['pax']
             response_str = "*Staff Listing (by priority)*\n"
             for index, pax in enumerate(pax_list):
