@@ -1,7 +1,7 @@
 from modules.twitter import twitter_core
 from modules.dialogflow import df
 from modules.helpers.helpers import *
-from modules.cal import flight_status, default_responses
+from modules.cal import flight_status, default_responses, cal_miles
 from pprint import pprint
 from modules.config import df_project_id
 from time import sleep
@@ -150,6 +150,17 @@ def twitter_hotels(request, session_id):
     twitter_core.send_text_with_buttons(session_id, TWITTER_HOTEL_MSG, btn_info)
 
 
+def twitter_miles_check(request, session_id):
+    print("REQUEST")
+    pprint(request)
+    api_resp = cal_miles.get_miles(request)
+    if api_resp is None:
+        twitter_core.send_dm(session_id, "Sorry, I can't seem to get any information for that account.")
+    else:
+        miles = "{:,}".format(api_resp)
+        twitter_core.send_dm(session_id, "Your account currently has {0} miles.".format(str(miles)))
+
+
 # The POSITION OF THIS dict MATTERS - BEFORE twitter_handle_df_request and AFTER other functions
 intent_mapping = {
     'flight.status': twitter_get_flight_status,
@@ -158,7 +169,8 @@ intent_mapping = {
     'faq.checkin.online': twitter_checkin,
     'faq.cars': twitter_cars,
     'faq.hotels': twitter_hotels,
-    'flight.checkin': twitter_checkin
+    'flight.checkin': twitter_checkin,
+    'faq.miles_check': twitter_miles_check
 }
 
 

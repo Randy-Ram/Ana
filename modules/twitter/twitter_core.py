@@ -214,7 +214,7 @@ def send_options(sender_id, options):
     print('SUCCESS' if r.status_code == 200 else 'PROBLEM: ' + r.text)
 
 
-def change_endpoints(new_endpoint):
+def change_endpoints(new_endpoint, delete=False):
     twt_bot2 = TwitterAPI(twitter_consumer_key, twitter_consumer_secret, twitter_access_token,
                           twitter_access_token_secret, auth_type='oAuth2')
     current_webhooks = get_webhooks()
@@ -222,6 +222,8 @@ def change_endpoints(new_endpoint):
         curr_id = current_webhooks['environments'][0]['webhooks'][0]['id']
         r = twt_bot2.request("account_activity/all/:%s/webhooks/:%s" % (ENV_NAME, curr_id))
         print(f"Status {r.status_code}")
+        if delete:
+            return
         create_webhook(new_endpoint)
         add_subscription()
 
@@ -274,7 +276,7 @@ if __name__ == "__main__":
     # get_user_id()
     # send_options()
     # create_welcome_message()
-    create_webhook("https://bot.caribbean-airlines.com/twitter")
+    # create_webhook("https://rram.ngrok.io/twitter")
     # delete_welcome_message("1055843962479620100")  #1055843962479620100
     # get_welcome_messages()
     # get_welcome_message_by_id("1055844711917862917")
@@ -282,6 +284,7 @@ if __name__ == "__main__":
     # get_welcome_message_rules()
     # pprint(get_webhooks())
 
+    # change_endpoints("https://test.test.com/twitter", delete=True)
     # change_endpoints("https://bot.caribbean-airlines.com/twitter")
     pprint(get_webhooks())
     add_subscription()

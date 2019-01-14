@@ -58,6 +58,10 @@ def index():
 @app.route('/facebook', methods=['GET', 'POST'])
 def webhook():
     pprint(request)
+    """
+     def webhook(self, request, on_message_received, on_postback_received, on_account_linked=None,
+                on_account_unlinked=None, on_location_received=None):
+    """
     return fb_bot.webhook(request, on_message, on_postback, on_linked, on_unlinked, on_location)
 
 
@@ -83,7 +87,7 @@ def twitter_handler():
         print("CRC Check")
         return webhook_challenge(request)
     else:
-        # pprint(request.get_json())
+        pprint(request.get_json())
         req = request.get_json()
         if "apps" not in req and "direct_message_events" in req:
             # send_options()

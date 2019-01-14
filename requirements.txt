@@ -1,7 +1,11 @@
+appdirs==1.4.3
+attrs==18.2.0
+cached-property==1.5.1
 cachetools==3.0.0
 certifi==2018.10.15
 chardet==3.0.4
 Click==7.0
+defusedxml==0.5.0
 dialogflow==0.5.1
 Flask==1.0.2
 google-api-core==1.6.0
@@ -9,11 +13,14 @@ google-auth==1.6.1
 googleapis-common-protos==1.5.5
 grpcio==1.17.0
 idna==2.7
+isodate==0.6.0
 itsdangerous==1.1.0
 Jinja2==2.10
+lxml==4.3.0
 MarkupSafe==1.0
 oauthlib==2.1.0
 protobuf==3.6.1
+psycopg2==2.7.6.1
 pyasn1==0.4.4
 pyasn1-modules==0.2.2
 PyJWT==1.7.0
@@ -21,6 +28,7 @@ PySocks==1.6.8
 pytz==2018.7
 requests==2.20.0
 requests-oauthlib==1.0.0
+requests-toolbelt==0.8.0
 rsa==4.0
 six==1.11.0
 SQLAlchemy==1.2.15
@@ -28,3 +36,4 @@ twilio==6.21.0
 TwitterAPI==2.5.7
 urllib3==1.24
 Werkzeug==0.14.1
+zeep==3.2.0

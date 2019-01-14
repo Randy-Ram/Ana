@@ -11,7 +11,7 @@ from modules.config import df_project_id
 from modules.helpers.helpers import *
 from modules.dialogflow import df
 from pprint import pprint
-from modules.cal import flight_status, default_responses
+from modules.cal import flight_status, default_responses, cal_miles
 from time import sleep
 from modules.logger import log_request
 from threading import Thread
@@ -68,8 +68,18 @@ def facebook_flight_status(request=None, session_id=None):
             fb_bot.send_text_message(session_id, each_flight['msg'])
 
 
+def facebook_miles_check(request=None, session_id=None):
+    api_resp = cal_miles.get_miles(request)
+    if api_resp is None:
+        fb_bot.send_text_message(session_id, "Sorry, I can't seem to get any information for that account.")
+    else:
+        miles = "{:,}".format(api_resp)
+        fb_bot.send_text_message(session_id, "Your account currently has {0} miles.".format(str(miles)))
+
+
 intent_mapping = {
-    "flight.status": facebook_flight_status
+    "flight.status": facebook_flight_status,
+    "faq.miles_check": facebook_miles_check
 }
 
 faq_mapping = {
@@ -81,11 +91,12 @@ faq_mapping = {
     "flight.checkin": faq_checkin_online,
     "faq.cars": faq_rent_car,
     "faq.reservations": faq_reservations,
-    "faq.contacts": faq_contacts,
+    "faq.contacts": faq_contacts
 }
 
 
 def facebook_handle_df_request(request, session_id):
+    # pprint(session_id)
     if 'queryResult' in request and 'intent' in request['queryResult']:
         intent = request['queryResult']['intent']['displayName']
     else:
@@ -107,6 +118,7 @@ def facebook_handle_request(sender, text):
         display_sender_action("typing_on", sender)
         df_sender_id = "facebook_" + sender
         ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")
+        pprint(sender)
         pprint(ai_json_response)
         if 'fulfillmentText' in ai_json_response:
             text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
