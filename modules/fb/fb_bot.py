@@ -65,6 +65,9 @@ def facebook_flight_status(request=None, session_id=None):
         fb_bot.send_text_message(session_id, api_resp["preamble"])
         sleep(1)
     for each_flight in api_resp["response_list"]:
+        if each_flight['flight_status'] == 'fb_card':
+            fb_bot.send_message_TypeC(session_id, each_flight['msg'])
+        else:
             fb_bot.send_text_message(session_id, each_flight['msg'])
 
 

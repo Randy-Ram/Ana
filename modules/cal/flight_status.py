@@ -3,6 +3,7 @@ import datetime
 import traceback
 from modules.config import flight_info_endpoint, cal_api_get_token, app_id, app_key, cert_path
 from pprint import pprint
+from modules.fb.helpers.status_cards import gen_fb_status_card
 
 payload = {
     "appId": app_id,
@@ -92,16 +93,17 @@ def fetch_flight_status(df_request):
                 # Get the date only from the Flight Status endpoint response to compare
                 arr_date_only = datetime.datetime.strptime(flight_resp['arr_time_local'], "%Y-%m-%dT%H:%M:%S").date()
                 dept_date_only = datetime.datetime.strptime(flight_resp['dept_time_local'], "%Y-%m-%dT%H:%M:%S").date()
-                if arr_date_only != day_of_date and dept_date_only != day_of_date:
-                    continue
+                # Commenting the below bc I'm not sure why it was added in the first place
+                # if arr_date_only != day_of_date and dept_date_only != day_of_date:
+                #     continue
                 if flight_status in ("Cancelled", "Delayed"):
                     flight_status = "cancellation" if flight_status == "Cancelled" else "delay"
-                    msg = f'Unfortunately {flight_num} has suffered a {flight_status}. The estimated departure time ' \
-                          f'is {formatted_dept_date} ({flight_resp["dept_code"]} time) and the new estimated arrival' \
-                          f' time is {formatted_arr_date} ({flight_resp["arr_code"]} time).'
-                    response_dict['response_list'].append({'flight_status': flight_status, "msg": msg, 'api_response': flight_resp})
-                    # fb_card = gen_fb_status_card(flight_resp, flight_status)
-                    # fb_bot.send_message_TypeC(user_session, fb_card)
+                    # msg = f'Unfortunately {flight_num} has suffered a {flight_status}. The estimated departure time ' \
+                    #       f'is {formatted_dept_date} ({flight_resp["dept_code"]} time) and the new estimated arrival' \
+                    #       f' time is {formatted_arr_date} ({flight_resp["arr_code"]} time).'
+                    # response_dict['response_list'].append({'flight_status': flight_status, "msg": msg, 'api_response': flight_resp})
+                    fb_card = gen_fb_status_card(flight_resp, flight_status)
+                    response_dict['response_list'].append({'flight_status': 'fb_card', 'msg': fb_card})
                 elif flight_status == "Scheduled":
                     msg = "{flight_num} is scheduled to depart {dept_city} on {dept_time} ({dept_code} time) and arrive" \
                           " in {arr_city} at {arr_time} ({arr_code} time).".format(
@@ -124,6 +126,7 @@ def fetch_flight_status(df_request):
                         arr_code=flight_resp['arr_code'],
                         dept_city=flight_resp['dept_city']
                     )
+                    print("COMPLETED FLIGHT")
                     response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
                     # fb_bot.send_text_message(user_session, msg)
                 elif flight_status == "Airborne":
