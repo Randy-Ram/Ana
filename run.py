@@ -8,6 +8,7 @@ from modules.twitter.twitter_core import *
 from modules.twitter.twitter_bot import *
 from modules.whatsapp.whatsapp_bot import *
 from modules.slack.slack_bot import *
+from modules.kommunicate.kommunicate_bot import *
 from modules.slack.slack_dispatcher import dispatch_slack_action, dispatch_slack_button_req
 import requests
 import random
@@ -135,6 +136,12 @@ def slack_button_endpoint():
     thread = Thread(target=dispatch_slack_button_req, kwargs={'slack_btn_resp': request.form})
     thread.start()
     return random.choice(responses), 200
+
+
+@app.route('/kommunicate', methods=["POST"])
+def kommuniate_handler():
+    komm_handle_request(request.get_json())
+    return jsonify({"status": "Success"})
 
 
 if config.access_type == "test" and __name__ == "__main__":

@@ -98,12 +98,13 @@ def fetch_flight_status(df_request):
                 #     continue
                 if flight_status in ("Cancelled", "Delayed"):
                     flight_status = "cancellation" if flight_status == "Cancelled" else "delay"
-                    # msg = f'Unfortunately {flight_num} has suffered a {flight_status}. The estimated departure time ' \
-                    #       f'is {formatted_dept_date} ({flight_resp["dept_code"]} time) and the new estimated arrival' \
-                    #       f' time is {formatted_arr_date} ({flight_resp["arr_code"]} time).'
+                    msg = f'Unfortunately {flight_num} has suffered a {flight_status}. The estimated departure time ' \
+                          f'is {formatted_dept_date} ({flight_resp["dept_code"]} time) and the new estimated arrival' \
+                          f' time is {formatted_arr_date} ({flight_resp["arr_code"]} time).'
                     # response_dict['response_list'].append({'flight_status': flight_status, "msg": msg, 'api_response': flight_resp})
                     fb_card = gen_fb_status_card(flight_resp, flight_status)
-                    response_dict['response_list'].append({'flight_status': 'fb_card', 'msg': fb_card})
+                    response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg,
+                                                           'fb_card': fb_card})
                 elif flight_status == "Scheduled":
                     msg = "{flight_num} is scheduled to depart {dept_city} on {dept_time} ({dept_code} time) and arrive" \
                           " in {arr_city} at {arr_time} ({arr_code} time).".format(

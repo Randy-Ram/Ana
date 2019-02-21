@@ -79,5 +79,5 @@ def get_flight_schedule(date, dept_city, arrv_city, max_connections):
 
 
 if __name__ == "__main__":
-    get_flight_schedule("20190112", "POS", "JFK")
+    get_flight_schedule("20190221", "POS", "JFK")
 
