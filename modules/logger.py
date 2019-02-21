@@ -19,7 +19,7 @@ from modules import models
 import traceback
 
 
-def log_request(df_response):
+def colog_request(df_response):
     user_question = ''
     bot_response = ''
     bot_intent = ''
