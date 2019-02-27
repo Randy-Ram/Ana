@@ -88,14 +88,14 @@ def faq_special_requests(fb_bot, user_session):
         fb_bot.send_text_message(user_session, FB_SPECIAL_SERVICES_INFO)
         create_and_send_carousel(ssr_dict, fb_bot, user_session)
     except:
-        fb_bot.send_text_message(user_session,FB_SPECIAL_SERVICES_ERROR)
+        fb_bot.send_text_message(user_session, FB_SPECIAL_SERVICES_ERROR)
 
 
 def faq_dutyfree(fb_bot, user_session):
     try:
         buttons = [
-            FBAttachment.button_web_url("Order Now", 'https://caribbeanairlinesdutyfree.com/'),
-            FBAttachment.button_web_url("More Info", 'https://www.caribbean-airlines.com/#/caribbean-experience/duty-free')
+            FBAttachment.button_web_url("Order Now", "https://caribbeanairlinesdutyfree.com/"),
+            FBAttachment.button_web_url("More Info", "https://www.caribbean-airlines.com/#/caribbean-experience/duty-free")
         ]
         img = 'https://i.imgur.com/4PEsVdo.jpg'
         title = "CAL Duty Free"

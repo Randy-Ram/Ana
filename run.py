@@ -140,7 +140,22 @@ def slack_button_endpoint():
 
 @app.route('/kommunicate', methods=["POST"])
 def kommuniate_handler():
-    komm_handle_request(request.get_json())
+    req = request.get_json()
+    if 'message' in req:
+        if 'created group' in req['message']:
+            print("Chat created, sending welcome message")
+            komm_send_welcome_msg(req)
+            return jsonify({"status": "Success"})
+        elif 'menu' in req['message'].lower():
+            komm_send_welcome_msg(req, "Here you go")
+            return jsonify({"status": "Success"})
+        elif "Transfer to Agent" in req['message']:
+            komm_transfer_to_agent(req)
+            return jsonify({"status": "Success"})
+        elif "Caribbean Miles" in req['message']:
+            kom_send_miles_menu(req)
+            return jsonify({"status": "Success"})
+    komm_handle_request(req)
     return jsonify({"status": "Success"})
 
 

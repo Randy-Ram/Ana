@@ -16,5 +16,5 @@ responses = {
     'faq.contacts': 'You can find our contact info here: https://www.caribbean-airlines.com/#/phone-contact-directory',
     'input.unknown': "I'm sorry, I don't quite understand your request.",
     'flight.book': "Sorry, currently I can't perform flight bookings ☹.️"
-                   "You can check out our website to book flights: https://www.caribbean-airlines.com"
+                   "You can check out our website to book flights: https://www.caribbean-airlines.com",
 }
