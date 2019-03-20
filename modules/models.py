@@ -5,9 +5,9 @@ from sqlalchemy.ext.declarative import declarative_base
 import datetime
 
 
-pg_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)
-metadata = MetaData()
-pg_base = declarative_base(pg_engine, metadata=metadata)
+# pg_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)
+# metadata = MetaData()
+# pg_base = declarative_base(pg_engine, metadata=metadata)
 
 
 def get_pg_session():
@@ -51,6 +51,6 @@ class AnaUserQueries(pg_base):
     detection_confidence = Column(Integer())
 
 
-metadata.create_all()
+# metadata.create_all()
 
 
