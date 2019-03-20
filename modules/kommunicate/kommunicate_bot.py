@@ -144,7 +144,7 @@ def komm_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         kommunicate_core.send_text_message(session_id, response)
     else:
-        kommunicate_core.send_text_message(session_id, KOM_NO_FUNCTIONALITY)
+        # kommunicate_core.send_text_message(session_id, KOM_NO_FUNCTIONALITY)
         log_error(f"{intent}: Intent not supported")
         raise Exception(intent + ": Intent not supported")
 
