@@ -13,7 +13,7 @@ from modules.dialogflow import df
 from pprint import pprint
 from modules.cal import flight_status, default_responses, cal_miles
 from time import sleep
-from modules.logger import log_request
+from modules.logger import log_request, log_error
 from threading import Thread
 from modules.fb.fb_strings import *
 
@@ -65,8 +65,8 @@ def facebook_flight_status(request=None, session_id=None):
         fb_bot.send_text_message(session_id, api_resp["preamble"])
         sleep(1)
     for each_flight in api_resp["response_list"]:
-        if each_flight['flight_status'] == 'fb_card':
-            fb_bot.send_message_TypeC(session_id, each_flight['msg'])
+        if 'fb_card' in each_flight.keys():
+            fb_bot.send_message_TypeC(session_id, each_flight['fb_card'])
         else:
             fb_bot.send_text_message(session_id, each_flight['msg'])
 
@@ -113,6 +113,7 @@ def facebook_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         fb_bot.send_text_message(recipient_id=session_id, text=response)
     else:
+        log_error(f"{intent}: Intent not supported")
         raise Exception(intent + FB_DF_INTENT_NOT_SUPPORTED)
 
 
@@ -129,7 +130,7 @@ def facebook_handle_request(sender, text):
             fb_bot.send_text_message(recipient_id=sender, text=text_to_send)
         if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
             # log_request(ai_json_response)
-            thread = Thread(target=log_request, kwargs={'df_response': ai_json_response})
+            thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
             thread.start()
     except Exception:
         # handover_request(sender)

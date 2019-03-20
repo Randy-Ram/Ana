@@ -5,7 +5,7 @@ from pprint import pprint
 from modules.cal import flight_status, default_responses, flight_loads
 from modules.slack import slack_core
 from time import sleep
-from modules.logger import log_request
+from modules.logger import log_request, log_error
 from threading import Thread
 
 '''
@@ -67,6 +67,7 @@ def slack_handle_df_request(request, session_id):
         response = default_responses.responses[intent]
         slack_core.send_message(session_id, response)
     else:
+        log_error(f"{intent}: Intent not supported")
         raise Exception(intent + ": Intent not supported")
 
 
@@ -84,6 +85,6 @@ def slack_handle_request(request):
         text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
         slack_core.send_message(sender_id, text_to_send)
     if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
-        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response})
+        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
         thread.start()
         # log_request(ai_json_response)

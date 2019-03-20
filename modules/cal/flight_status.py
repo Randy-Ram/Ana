@@ -13,7 +13,7 @@ payload = {
 
 def get_token():
     try:
-        r = requests.post(cal_api_get_token, json=payload, verify=cert_path)
+        r = requests.post(cal_api_get_token, json=payload, verify=False)
         resp = r.json()
         if resp['status'] is True:
             return resp['token']
@@ -53,7 +53,7 @@ def get_flight_info(flight_number, iso_date):
       "flight_number": flight_number
     }
     header = create_header()
-    resp = requests.post(flight_info_endpoint, json=data, headers=header, verify=False)
+    resp = requests.post(flight_info_endpoint, json=data, headers=header, verify=True)
     pprint(resp.json())
     return resp.json()
 
@@ -98,12 +98,13 @@ def fetch_flight_status(df_request):
                 #     continue
                 if flight_status in ("Cancelled", "Delayed"):
                     flight_status = "cancellation" if flight_status == "Cancelled" else "delay"
-                    # msg = f'Unfortunately {flight_num} has suffered a {flight_status}. The estimated departure time ' \
-                    #       f'is {formatted_dept_date} ({flight_resp["dept_code"]} time) and the new estimated arrival' \
-                    #       f' time is {formatted_arr_date} ({flight_resp["arr_code"]} time).'
+                    msg = f'Unfortunately {flight_num} has suffered a {flight_status}. The estimated departure time ' \
+                          f'is {formatted_dept_date} ({flight_resp["dept_code"]} time) and the new estimated arrival' \
+                          f' time is {formatted_arr_date} ({flight_resp["arr_code"]} time).'
                     # response_dict['response_list'].append({'flight_status': flight_status, "msg": msg, 'api_response': flight_resp})
                     fb_card = gen_fb_status_card(flight_resp, flight_status)
-                    response_dict['response_list'].append({'flight_status': 'fb_card', 'msg': fb_card})
+                    response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg,
+                                                           'fb_card': fb_card})
                 elif flight_status == "Scheduled":
                     msg = "{flight_num} is scheduled to depart {dept_city} on {dept_time} ({dept_code} time) and arrive" \
                           " in {arr_city} at {arr_time} ({arr_code} time).".format(
@@ -130,15 +131,15 @@ def fetch_flight_status(df_request):
                     response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
                     # fb_bot.send_text_message(user_session, msg)
                 elif flight_status == "Airborne":
-                    msg = '''{flight_num} departed {dept_city} at {dept_time} ({dept_code} time). It is currently 
-                    airborne and scheduled to arrive at {arr_city} at {arr_time} ({arr_code} time)'''.format(
-                        flight_num=flight_num,
-                        arr_city=flight_resp["arr_city"],
-                        arr_time=formatted_arr_date,
-                        dept_city=flight_resp["dept_city"],
-                        dept_time=formatted_dept_date,
-                        dept_code=flight_resp["dept_code"],
-                        arr_code=flight_resp["arr_code"]
+                    msg = "{flight_num} departed {dept_city} at {dept_time} ({dept_code} time). It is currently" \
+                        " airborne and scheduled to arrive at {arr_city} at {arr_time} ({arr_code} time)".format(
+                            flight_num=flight_num,
+                            arr_city=flight_resp["arr_city"],
+                            arr_time=formatted_arr_date,
+                            dept_city=flight_resp["dept_city"],
+                            dept_time=formatted_dept_date,
+                            dept_code=flight_resp["dept_code"],
+                            arr_code=flight_resp["arr_code"]
                     )
                     response_dict['response_list'].append({'flight_status': flight_status, 'msg': msg})
                     # fb_bot.send_text_message(user_session, msg)
