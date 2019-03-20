@@ -5,7 +5,7 @@ from modules.dialogflow import df
 from pprint import pprint
 from modules.cal import flight_status, default_responses, flight_loads
 from time import sleep
-from modules.logger import log_request
+from modules.logger import log_request, log_error
 from threading import Thread
 from modules.whatsapp.whatsapp_strings import *
 
@@ -59,6 +59,7 @@ def whatsapp_handle_df_request(request, session_id):
         whatsapp_core.send_message(session_id, response)
     else:
         whatsapp_core.send_message(session_id, WHATSAPP_NO_FUNCTIONALITY)
+        log_error(f"{intent}: Intent not supported")
         raise Exception(intent + ": Intent not supported")
 
 
@@ -75,5 +76,5 @@ def whatsapp_handle_request(request):
         # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
     if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
         # log_request(ai_json_response)
-        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response})
+        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
         thread.start()

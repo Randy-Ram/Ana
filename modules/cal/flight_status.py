@@ -53,7 +53,7 @@ def get_flight_info(flight_number, iso_date):
       "flight_number": flight_number
     }
     header = create_header()
-    resp = requests.post(flight_info_endpoint, json=data, headers=header, verify=False)
+    resp = requests.post(flight_info_endpoint, json=data, headers=header, verify=True)
     pprint(resp.json())
     return resp.json()
 

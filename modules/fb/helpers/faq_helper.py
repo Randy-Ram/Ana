@@ -51,13 +51,13 @@ contact_dict = {
     }
 
 reservation_dict = {
-            "Trinidad & Tobago and Suriname": ['+18686257200', 'https://i.imgur.com/gYkc0v8.png', ''],
-            "USA, Canada, St. Maarten": ['+18009204225 ', 'https://i.imgur.com/IV3zTU7.png', ''],
-            "Caribbean and Guyana": ['+18007442225', 'https://i.imgur.com/F4fk60H.png', ''],
-            "Jamaica (intl)": ['+18005235585', 'https://i.imgur.com/xWtIHe7.png', 'International Calls'],
-            "Jamaica (local)": ['+18883592475', 'https://i.imgur.com/xWtIHe7.png', 'Local Calls'],
-            "Caracas": ['+582123357405', 'https://i.imgur.com/eF10dBI.png', ''],
-            "UK (primary)": ['+448707747336', 'https://i.imgur.com/9B5ipna.png', 'Primary Contact'],
-            "UK (secondary)": ['+448453624225', 'https://i.imgur.com/9B5ipna.png', 'Secondary Contact'],
-            "All Other Locations": ['+18005235585', 'https://i.imgur.com/J7aaDE8.gif', '']
+            "Trinidad & Tobago and Suriname": ['tel:+18686257200', 'https://i.imgur.com/gYkc0v8.png', ''],
+            "USA, Canada, St. Maarten": ['tel:+18009204225 ', 'https://i.imgur.com/IV3zTU7.png', ''],
+            "Caribbean and Guyana": ['tel:+18007442225', 'https://i.imgur.com/F4fk60H.png', ''],
+            "Jamaica (intl)": ['tel:+18005235585', 'https://i.imgur.com/xWtIHe7.png', 'International Calls'],
+            "Jamaica (local)": ['tel:+18883592475', 'https://i.imgur.com/xWtIHe7.png', 'Local Calls'],
+            "Caracas": ['tel:+582123357405', 'https://i.imgur.com/eF10dBI.png', ''],
+            "UK (primary)": ['tel:+448707747336', 'https://i.imgur.com/9B5ipna.png', 'Primary Contact'],
+            "UK (secondary)": ['tel:+448453624225', 'https://i.imgur.com/9B5ipna.png', 'Secondary Contact'],
+            "All Other Locations": ['tel:+18005235585', 'https://i.imgur.com/J7aaDE8.gif', '']
         }

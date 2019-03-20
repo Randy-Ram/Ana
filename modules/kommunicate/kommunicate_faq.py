@@ -7,10 +7,10 @@ import json
 from pprint import pprint
 
 
-def send_button_with_urls(button_dict, button_title, session_id):
+def send_button_with_urls(button_dict, button_title, session_id, open_link_in_new_tab="false"):
     buttons = []
     for key, val in button_dict.items():
-        buttons.append(KommActionableMessages.button_web_url(val, key))
+        buttons.append(KommActionableMessages.button_web_url(val, key, open_link_in_new_tab))
     buttons = json.dumps(buttons)
     send_message_buttons(button_title, session_id, buttons)
 
@@ -92,7 +92,7 @@ def faq_contacts(session_id):
     send_button_with_urls(contact_dict, title, session_id)
 
 
-def faq_reservations(session_id):
+def faq_make_reservation(session_id):
     """
     TODO - NEED TO RESOLVE SINCE PHONE NUMBERS ARE NOT A WEB LINK
     :param session_id:
@@ -101,7 +101,7 @@ def faq_reservations(session_id):
     try:
         for key, val in reservation_dict.items():
             val.append([KommActionableMessages.card_link_button("Call Representative", val[0])])
-        create_and_send_carousel(reservation_dict, session_id, message="Here's our reservation info.")
+        create_and_send_carousel(reservation_dict, session_id, message="You can contact our reservations team to create or make changes to your itinerary.")
         website_url = {
             "Book a Flight": "https://www.caribbean-airlines.com/"
         }

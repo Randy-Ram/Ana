@@ -5,7 +5,7 @@ from modules.cal import flight_status, default_responses, cal_miles
 from pprint import pprint
 from modules.config import df_project_id
 from time import sleep
-from modules.logger import log_request
+from modules.logger import log_request, log_error
 from threading import Thread
 from modules.twitter.twitter_strings import *
 
@@ -187,6 +187,7 @@ def twitter_handle_df_request(request, session_id):
         twitter_core.send_dm(session_id, response)
     else:
         twitter_core.send_dm(session_id, TWITTER_DF_NO_FUNCTIONALITY)
+        log_error(f"{intent}: Intent not supported")
         raise Exception(intent + TWITTER_INTENT_NOT_SUPPORTED)
 
 
@@ -208,6 +209,6 @@ def twitter_handle_user_request(request):
         twitter_core.send_dm(sender_id, text_to_send)
         # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
     if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
-        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response})
+        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
         thread.start()
         # log_request(ai_json_response)
