@@ -10,15 +10,15 @@ import datetime
 # pg_base = declarative_base(pg_engine, metadata=metadata)
 
 
-def get_pg_session():
-    global pg_engine
-    Session = sessionmaker(bind=pg_engine, expire_on_commit=True)
-    session = Session()
-    if not session.is_active:
-        pg_engine = create_engine(SQLALCHEMY_DATABASE_URI, connect_args={'sslmode': 'require'}, echo=False)
-        Session = sessionmaker(bind=pg_engine)
-        session = Session()
-    return session
+# def get_pg_session():
+#     global pg_engine
+#     Session = sessionmaker(bind=pg_engine, expire_on_commit=True)
+#     session = Session()
+#     if not session.is_active:
+#         pg_engine = create_engine(SQLALCHEMY_DATABASE_URI, connect_args={'sslmode': 'require'}, echo=False)
+#         Session = sessionmaker(bind=pg_engine)
+#         session = Session()
+#     return session
 
 
 """
@@ -39,16 +39,16 @@ def get_pg_session():
 """
 
 
-class AnaUserQueries(pg_base):
-    __tablename__ = database_table_name
-    id = Column(Integer, Sequence('id_seq'), primary_key=True)
-    # session_id = Column(String(256), index=True)
-    user_question = Column(String(256))
-    bot_response = Column(String(1024))
-    bot_intent = Column(String(256))
-    datetime_id = Column(DateTime, default=datetime.datetime.now)
-    bot_action = Column(String(256))
-    detection_confidence = Column(Integer())
+# class AnaUserQueries(pg_base):
+#     __tablename__ = database_table_name
+#     id = Column(Integer, Sequence('id_seq'), primary_key=True)
+#     # session_id = Column(String(256), index=True)
+#     user_question = Column(String(256))
+#     bot_response = Column(String(1024))
+#     bot_intent = Column(String(256))
+#     datetime_id = Column(DateTime, default=datetime.datetime.now)
+#     bot_action = Column(String(256))
+#     detection_confidence = Column(Integer())
 
 
 # metadata.create_all()
