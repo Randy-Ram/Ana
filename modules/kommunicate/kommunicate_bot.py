@@ -137,6 +137,7 @@ def komm_handle_df_request(request, session_id):
         raise Exception(KOMM_DF_EXCEPTION)
     # Use intent mapping dict to call function. All functions take the request and the session_id
     if intent in intent_mapping:
+        print(f"Using intent: {intent}")
         intent_mapping[intent](request, session_id)
     elif intent in faq_mapping:
         faq_mapping[intent](session_id)
