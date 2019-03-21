@@ -131,6 +131,7 @@ faq_mapping = {
 
 def komm_handle_df_request(request, session_id):
     # pprint(request)
+    print("KOMM_HANDLE_DF_REQUEST")
     if 'queryResult' in request and 'intent' in request['queryResult']:
         intent = request['queryResult']['intent']['displayName']
     else:
@@ -151,8 +152,9 @@ def komm_handle_df_request(request, session_id):
 
 
 def komm_handle_request(request):
-    print(type(request))
+    # print(type(request))
     pprint(request)
+    print("KOMM_HANDLE_REQUEST")
     try:
         text = request["message"]
         sender_id = request["groupId"]

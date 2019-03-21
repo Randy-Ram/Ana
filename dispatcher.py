@@ -3,7 +3,7 @@ from modules.twitter.twitter_bot import twitter_handle_df_request
 from modules.whatsapp.whatsapp_bot import whatsapp_handle_df_request
 from modules.fb.fb_bot import facebook_handle_df_request
 from modules.slack.slack_bot import slack_handle_df_request
-from modules.kommunicate.kommunicate_bot import  komm_handle_df_request
+from modules.kommunicate.kommunicate_bot import komm_handle_df_request
 
 # intent_mapping = {
 #     'facebook_flight.status': '',
