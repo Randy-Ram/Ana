@@ -9,6 +9,10 @@ from modules.fb.fb_bot import fb_bot, facebook_handle_request
 from modules.fb.helpers.attachment import FBAttachment
 from pprint import pprint
 from modules.fb.helpers import persistent_menu
+from modules import config
+
+
+token = config.facebook_access_token
 
 
 def on_postback(sender, text, requestInfo):
@@ -75,12 +79,12 @@ def handover_request(recipient_id, silent=False):
     if not silent:
         fb_bot.send_text_message(recipient_id,
                               "One sec, transferring you to an agent for assistance (Response times may vary).")
-    pass_thread_endpoint = 'https://gr`aph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
+    pass_thread_endpoint = 'https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
     payload = {
         "recipient": {"id": recipient_id},
         "target_app_id": 263902037430900,
     }
-    response = bot._send_payload(payload, pass_thread_endpoint)
+    response = fb_bot._send_payload(payload, pass_thread_endpoint)
 
 
 def on_linked(sender, login, requestInfo):
