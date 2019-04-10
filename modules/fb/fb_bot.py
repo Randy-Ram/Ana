@@ -46,13 +46,13 @@ def configure_bot():
     return fb_bot
 
 
-def handover_request(recipient_id, silent=False):
+def handover_request(request, session_id, silent=False):
     print("Handing over request to agent...")
     if not silent:
         FBBot.send_text_message(recipient_id, FB_HANDOVER_REQ_MSG)
     pass_thread_endpoint = 'https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
     payload = {
-        "recipient": {"id": recipient_id},
+        "recipient": {"id": session_id},
         "target_app_id": 263902037430900,
     }
     response = fb_bot._send_payload(payload, pass_thread_endpoint)
@@ -82,7 +82,8 @@ def facebook_miles_check(request=None, session_id=None):
 
 intent_mapping = {
     "flight.status": facebook_flight_status,
-    "faq.miles_check": facebook_miles_check
+    "faq.miles_check": facebook_miles_check,
+    "bot.handover": handover_request
 }
 
 faq_mapping = {

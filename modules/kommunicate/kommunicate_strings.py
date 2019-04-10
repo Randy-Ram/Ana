@@ -10,8 +10,7 @@ DF_SENDER_ID = 'kommunicate_'
 KOM_ERROR_MSG_BODY = "Sorry but it seems I'm having some issues at the moment."
 
 
-KOM_WELCOME_GREETING = "Hey there, how can I help you? You can type 'menu' to access " \
-                       "the below options anytime."
+KOM_WELCOME_GREETING = "\U0001F916 - Hi there, I'm Ana. I'm a robot and I'll try to answer any questions you may have. You can type 'menu' to access the below options anytime."
 KOM_WELCOME_MESSAGES = [
     {
         "title": "Check In \U0001F3AB",

@@ -29,6 +29,13 @@ from modules.kommunicate.kommunicate_faq import *
 """
 
 
+def komm_handover(sender_id):
+    msg = "If you require further assistance, you can speak to an agent directly by clicking the button below."
+    quick_reply = [KommActionableMessages.quick_reply("Speak to Agent \U0001F469", "Transfer to Agent")]
+    payload = json.dumps(quick_reply)
+    kommunicate_core.send_quick_reply(sender_id, msg, payload)
+
+
 def komm_send_welcome_msg(request, greeting=KOM_WELCOME_GREETING):
     sender_id = request["groupId"]
     payload = []
@@ -103,10 +110,6 @@ def komm_flight_book(request, session_id):
     faq_make_reservation(session_id)
 
 
-def komm_handover(*args, **kwargs):
-    pass
-
-
 intent_mapping = {
     "flight.status": komm_flight_status,
     "flight.loads": komm_flight_loads,
@@ -152,6 +155,12 @@ def komm_handle_df_request(request, session_id):
 
 
 def komm_handle_request(request):
+    """
+    Handle the request from Kommunicate and forward to DialogFlow for processing
+
+    :param request: Request param from Kommunicate. See e.g request at the start of this file
+    :return: True if bot.handover is requested
+    """
     # print(type(request))
     pprint(request)
     print("KOMM_HANDLE_REQUEST")
@@ -173,6 +182,7 @@ def komm_handle_request(request):
             # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
         if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
             # log_request(ai_json_response)
+            komm_handover(sender_id)
             thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
             thread.start()
         else:

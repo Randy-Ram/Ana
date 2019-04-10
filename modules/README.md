@@ -2,7 +2,7 @@ All modules should must follow the below steps:
 
 - Have their own folder
 - Contain an "\__init\__" file
-- Have two files - "module_bot.py" and "module_core.py"
+- Have at least these two files - "module_bot.py" and "module_core.py"
 
 
 #module_core.py

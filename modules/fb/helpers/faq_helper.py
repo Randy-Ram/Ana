@@ -39,7 +39,7 @@ miles_dict = {
 
 
 checkin_dict = {
-        "Check-In": 'https://checkin.si.amadeus.net/1ASIHSSCWEBBW/sscwbw/checkin'
+        "Check-In": "https://checkin.si.amadeus.net/1ASIHSSCWEBBW/sscwbw/checkin"
     }
 
 car_dict = {

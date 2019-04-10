@@ -76,9 +76,10 @@ def send_message_buttons(message, group_id, payload):
         "metadata": {
             "contentType": "300",
             "templateId": "3",
-            "payload": str(payload)
+            "payload": payload
         }
     }
+    pprint(data)
     send_generic_message(data=data)
     # resp = requests.post(send_message_url, json=data, headers=headers)
     # pprint(resp.text)
