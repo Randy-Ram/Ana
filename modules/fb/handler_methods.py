@@ -71,7 +71,16 @@ def handover_check(recipient_id, df_response=None, text=None):
 
 
 def handover_request(recipient_id, silent=False):
-    pass
+    print("Handing over request to agent...")
+    if not silent:
+        fb_bot.send_text_message(recipient_id,
+                              "One sec, transferring you to an agent for assistance (Response times may vary).")
+    pass_thread_endpoint = 'https://gr`aph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
+    payload = {
+        "recipient": {"id": recipient_id},
+        "target_app_id": 263902037430900,
+    }
+    response = bot._send_payload(payload, pass_thread_endpoint)
 
 
 def on_linked(sender, login, requestInfo):

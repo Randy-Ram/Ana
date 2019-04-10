@@ -49,13 +49,14 @@ def configure_bot():
 def handover_request(request, session_id, silent=False):
     print("Handing over request to agent...")
     if not silent:
-        FBBot.send_text_message(session_id, FB_HANDOVER_REQ_MSG)
+        FBBot.send_text_message(session_id,
+                                "One sec, transferring you to an agent for assistance (Response times may vary).")
     pass_thread_endpoint = 'https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
     payload = {
         "recipient": {"id": session_id},
         "target_app_id": 263902037430900,
     }
-    response = fb_bot._send_payload(payload, pass_thread_endpoint)
+    fb_bot._send_payload(payload, pass_thread_endpoint)
 
 
 def facebook_flight_status(request=None, session_id=None):
