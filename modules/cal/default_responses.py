@@ -17,4 +17,5 @@ responses = {
     'input.unknown': "I'm sorry, I don't quite understand your request.",
     'flight.book': "Unfortunately I can't perform online flight bookings ☹.️"
                    "You can check out our website to book flights: https://www.caribbean-airlines.com",
+    'flight.notifications': "Caribbean notifications allow you to stay up-to-date on every part of your journey. \nYou can subscribe here: https://www.caribbean-airlines.com/#/caribbean-flight-notifications."
 }

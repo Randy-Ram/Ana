@@ -102,6 +102,7 @@ faq_mapping = {
 
 def facebook_handle_df_request(request, session_id):
     # pprint(session_id)
+    print("HEREHERE!", request)
     if 'queryResult' in request and 'intent' in request['queryResult']:
         intent = request['queryResult']['intent']['displayName']
     else:

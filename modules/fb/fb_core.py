@@ -8,6 +8,7 @@ import hashlib
 import hmac
 import requests
 from pprint import pprint
+from modules.config import cert_path
 
 
 # https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions
@@ -354,7 +355,8 @@ class FBBot(object):
             response = requests.post(
                 request_endpoint,
                 params=self.auth_args,
-                json=payload
+                json=payload,
+                verify=False
             )
             print('Response result: ' + str(response.json()))
             return response.json()

@@ -137,7 +137,6 @@ def slack_button_endpoint():
     thread.start()
     return random.choice(responses), 200
 
-
 @app.route('/kommunicate', methods=["POST"])
 def kommuniate_handler():
     transfer_json = [{
