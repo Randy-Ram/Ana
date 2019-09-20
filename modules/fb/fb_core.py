@@ -163,7 +163,7 @@ class FBBot(object):
             "persistent_menu": [
                 {
                     "locale": "default",
-                    "composer_input_disabled": False,
+                    "composer_input_disabled": True,
                     "call_to_actions": buttons
                 }
             ]

@@ -9,7 +9,10 @@ session.verify = False
 # wsdl = 'https://wsbwauat.frequentflyer.aero/lms-ws/lmsWs?wsdl'
 wsdl = 'https://wsbwa.frequentflyer.aero/lms-ws/lmsWs?wsdl'
 transport = Transport(session=session)
-client = zeep.Client(wsdl=wsdl, transport=transport)
+try:
+    client = zeep.Client(wsdl=wsdl, transport=transport)
+except Exception as e:
+    raise ConnectionError("Cannot connect to ALMS")
 username = 'wstest'
 password ='WS-test01'
 

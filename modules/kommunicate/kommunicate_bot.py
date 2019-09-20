@@ -3,7 +3,7 @@ from modules.config import df_project_id
 from modules.helpers.helpers import *
 from modules.dialogflow import df
 from pprint import pprint
-from modules.cal import flight_status, default_responses, flight_loads, cal_miles
+from modules.cal import flight_status, default_responses, flight_loads
 from time import sleep
 from modules.logger import log_request, log_error
 from modules.kommunicate.kommunicate_strings import *
@@ -12,6 +12,11 @@ import traceback
 from modules.kommunicate.kommunicate_actionable import KommActionableMessages
 import json
 from modules.kommunicate.kommunicate_faq import *
+
+try:
+    from modules.cal import cal_miles
+except ConnectionError as e:
+    print(e)
 
 """
 {

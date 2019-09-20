@@ -13,11 +13,13 @@ from modules.slack.slack_dispatcher import dispatch_slack_action, dispatch_slack
 import requests
 import random
 import dispatcher
+from modules.fb.fb_bot import configure_bot as configure_fb_bot
 
 
 app = Flask(__name__)
 
-bot = configure_bot()
+# bot = configure_bot()
+configure_fb_bot()
 
 
 def check_auth(username, password):

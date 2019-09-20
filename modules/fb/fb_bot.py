@@ -11,11 +11,16 @@ from modules.config import df_project_id
 from modules.helpers.helpers import *
 from modules.dialogflow import df
 from pprint import pprint
-from modules.cal import flight_status, default_responses, cal_miles
+from modules.cal import flight_status, default_responses
 from time import sleep
 from modules.logger import log_request, log_error
 from threading import Thread
 from modules.fb.fb_strings import *
+
+try:
+    from modules.cal import cal_miles
+except ConnectionError as e:
+    print(e)
 
 
 token = config.facebook_access_token
@@ -61,7 +66,7 @@ def handover_request(request, session_id, silent=False):
 
 def facebook_flight_status(request=None, session_id=None):
     api_resp = flight_status.fetch_flight_status(request)
-    pprint(api_resp)
+    pprint(f"Flight status response: {api_resp}")
     if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
         fb_bot.send_text_message(session_id, api_resp["preamble"])
         sleep(1)

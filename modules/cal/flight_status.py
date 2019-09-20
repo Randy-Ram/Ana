@@ -167,6 +167,7 @@ def fetch_flight_status(df_request):
         response_dict['response_list'].append(
             {'flight_status': "error", "msg": "Sorry, I can't seem to find any information for that flight."})
     finally:
+        print(response_dict)
         return response_dict
 
 

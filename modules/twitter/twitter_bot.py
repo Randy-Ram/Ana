@@ -1,13 +1,18 @@
 from modules.twitter import twitter_core
 from modules.dialogflow import df
 from modules.helpers.helpers import *
-from modules.cal import flight_status, default_responses, cal_miles
+from modules.cal import flight_status, default_responses
 from pprint import pprint
 from modules.config import df_project_id
 from time import sleep
 from modules.logger import log_request, log_error
 from threading import Thread
 from modules.twitter.twitter_strings import *
+
+try:
+    from modules.cal import cal_miles
+except ConnectionError as e:
+    print(e)
 
 """
 {'direct_message_events': [{'created_timestamp': '1540561880170',

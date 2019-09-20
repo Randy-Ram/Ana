@@ -9,6 +9,11 @@ from modules.logger import log_request, log_error
 from threading import Thread
 from modules.whatsapp.whatsapp_strings import *
 
+try:
+    from modules.cal import cal_miles
+except ConnectionError as e:
+    print(e)
+
 """
 {'AccountSid': 'ACca18028c19aa159322f34a632f8e2082',
  'ApiVersion': '2010-04-01',
