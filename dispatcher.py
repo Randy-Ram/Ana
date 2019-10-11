@@ -10,6 +10,8 @@ from modules.kommunicate.kommunicate_bot import komm_handle_df_request
 #     'twitter_flight.status': twitter_get_flight_status
 # }
 
+
+# Define the DialogFlow service handlers here for each platform
 service_handlers = {
     'facebook': facebook_handle_df_request,
     'twitter': twitter_handle_df_request,
@@ -20,6 +22,12 @@ service_handlers = {
 
 
 def get_platform_and_session_id(session):
+    """
+    Helper method that retrieves the platform and session.
+    Data is in the form 'ajkdajlfajf/facebook_12313'
+    :param session: Variable from dialogflow that is being parsed
+    :return: platform, session
+    """
     if "/" not in session:
         raise Exception("Session must contain '/' and '_'")
     session_split = session.split("/")
@@ -30,6 +38,12 @@ def get_platform_and_session_id(session):
 
 
 def handle_request(request):
+    """
+    This function receives the Dialogflow request from the web server and routes it to the appropriate
+    handler.
+    :param request: Request from DF
+    :return: None
+    """
     request = request.json
     session = None
     platform = None
