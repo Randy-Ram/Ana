@@ -27,7 +27,7 @@ This file should at least contain the following methods:
 
 This method would receive the incoming request from the service and
 extract the user text. This text **MUST** be sent to Google for processing using
-the following code:
+the following code (for the case of Twitter):
 
 ```python
 ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")

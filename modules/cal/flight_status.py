@@ -54,6 +54,7 @@ def get_flight_info(flight_number, iso_date):
     }
     header = create_header()
     resp = requests.post(flight_info_endpoint, json=data, headers=header, verify=True)
+    pprint(resp.text)
     pprint(resp.json())
     return resp.json()
 
@@ -173,4 +174,4 @@ def fetch_flight_status(df_request):
 
 if __name__ == "__main__":
     # from_date, to_date = get_from_to_date('2018-11-12T12:00:00-05:00')
-    get_flight_info("BW600", '2018-11-12T12:00:00-05:00')
+    get_flight_info("BW524", '2019-09-22T12:00:00-05:00')

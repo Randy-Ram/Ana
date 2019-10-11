@@ -15,7 +15,7 @@
  'queryText': ' Ltoatoaga'
 """
 
-from modules import models
+# from modules import models
 from modules.azure_queues import AzureQueue
 import traceback
 import json
