@@ -1,1 +1,1 @@
-[Ana Architecture](images/architecture.png)
+[Ana Architecture](https://imgur.com/a/tqA709K)
