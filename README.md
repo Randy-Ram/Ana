@@ -1,8 +1,8 @@
-#Ana
+# Ana
 Ana is a bot-platform that integrates various messaging platforms into one 
 cohesive interface. It uses Dialogflow for NLP processing.
 
-#Platforms Supported
+# Platforms Supported
 * Facebook
 * Twitter
 * Slack
@@ -10,7 +10,7 @@ cohesive interface. It uses Dialogflow for NLP processing.
 * Kommunicate
 
 
-#Architecture
+# Architecture
 
 ![Ana Architecture](https://i.imgur.com/hodztrI.png)
 
