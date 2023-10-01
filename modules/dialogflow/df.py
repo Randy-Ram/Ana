@@ -4,9 +4,6 @@ from pprint import pprint
 import google.protobuf as pf
 import json
 
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "Flights-af1267ecd8b8.json")
-
-# print(config.GOOGLE_APPLICATION_CREDENTIALS)
 
 """
 {'originalDetectIntentRequest': {'payload': {}},
