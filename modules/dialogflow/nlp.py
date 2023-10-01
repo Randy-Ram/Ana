@@ -17,7 +17,7 @@ CLIENT_ACCESS_TOKEN = config.dialogflow_access_token
 def get_ai_handle():
     ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
     request = ai.text_request()
-    request.lang = 'en'  # optional, default value equal 'en'
+    request.lang = "en"  # optional, default value equal 'en'
     request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
     return request
 
@@ -31,7 +31,7 @@ def send_text_query(request, text):
 def ai_instantiate_and_get_response(text, sender_id):
     ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
     request = ai.text_request()
-    request.lang = 'en'  # optional, default value equal 'en'
+    request.lang = "en"  # optional, default value equal 'en'
     request.session_id = sender_id
     request.query = text
     response = request.getresponse()
@@ -39,5 +39,5 @@ def ai_instantiate_and_get_response(text, sender_id):
     return json.loads(response.read().decode("utf-8"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(ai_instantiate_and_get_response("Hi"))

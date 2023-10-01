@@ -32,8 +32,11 @@ def handle_staff_flight_list(response_url, text):
         pprint(resp)
         send_response_to_slash_command(response_url, resp)
     except ValueError:
-        send_response_to_slash_command(response_url, "Improper command usage. Please ensure you use the command like: "
-                                                     "*/flist 20181217 POS SLU 434*")
+        send_response_to_slash_command(
+            response_url,
+            "Improper command usage. Please ensure you use the command like: "
+            "*/flist 20181217 POS SLU 434*",
+        )
 
 
 def handle_flight_load(response_url, text):
@@ -43,31 +46,41 @@ def handle_flight_load(response_url, text):
         pprint(resp)
         send_response_to_slash_command(response_url, resp)
     except ValueError:
-        send_response_to_slash_command(response_url, "Improper command usage. Please ensure you use the command like:"
-                                                     "*/fload 20181228 525*")
+        send_response_to_slash_command(
+            response_url,
+            "Improper command usage. Please ensure you use the command like:"
+            "*/fload 20181228 525*",
+        )
 
 
 def handle_flight_schedule(response_url, text, channel_id, user_id):
     try:
         date, dept_city, arrv_city, connections = text.strip().split()
-        resp_arr, attachment_arr, resp_msg = get_flight_schedule(date, dept_city, arrv_city, connections)
+        resp_arr, attachment_arr, resp_msg = get_flight_schedule(
+            date, dept_city, arrv_city, connections
+        )
         if resp_arr is None and resp_msg is not None:
             send_ephemeral_msg(channel_id, user_id, resp_msg)
             return
-        output_arr = create_flight_load_attachment_json(resp_arr, attachment_arr, channel_id, user_id)
+        output_arr = create_flight_load_attachment_json(
+            resp_arr, attachment_arr, channel_id, user_id
+        )
         for responses in output_arr:
             # send_response_to_slash_command(response_url, responses)
             # pprint(responses)
             send_ephemeral_msg(channel_id, user_id, None, payload=responses)
     except ValueError:
-        send_response_to_slash_command(response_url, "Improper command usage. Please ensure you use the command like:"
-                                                     "*/fsched 20181228 POS JFK 0*")
+        send_response_to_slash_command(
+            response_url,
+            "Improper command usage. Please ensure you use the command like:"
+            "*/fsched 20181228 POS JFK 0*",
+        )
 
 
 def dispatch_slack_action(slack_request):
-    command = slack_request['command']
-    response_url = slack_request['response_url']
-    text = slack_request['text']
+    command = slack_request["command"]
+    response_url = slack_request["response_url"]
+    text = slack_request["text"]
     channel_id = slack_request["channel_id"]
     user_id = slack_request["user_id"]
     if command == "/flist":
@@ -82,12 +95,12 @@ def dispatch_slack_action(slack_request):
 
 
 def dispatch_slack_button_req(slack_btn_resp):
-    slack_payload = json.loads(slack_btn_resp['payload'])
+    slack_payload = json.loads(slack_btn_resp["payload"])
     # pprint(slack_payload)
-    req = slack_payload['callback_id']
-    text = slack_payload['actions'][0]['value']
-    response_url = slack_payload['response_url']
-    if req == 'fload':
+    req = slack_payload["callback_id"]
+    text = slack_payload["actions"][0]["value"]
+    response_url = slack_payload["response_url"]
+    if req == "fload":
         handle_flight_load(response_url, text)
 
 
@@ -106,4 +119,3 @@ def dispatch_slack_button_req(slack_btn_resp):
         "trigger_id":"510737732499.392754862868.cfaf707a5ca951ca45409a3f9c57ec92"}'}
 
 """
-

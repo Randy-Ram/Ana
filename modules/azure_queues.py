@@ -6,7 +6,9 @@ from modules.config import storage_acc_name, storage_acc_key
 
 class AzureQueue:
     def __init__(self, queue_name):
-        self.queue_service = QueueService(account_name=storage_acc_name, account_key=storage_acc_key)
+        self.queue_service = QueueService(
+            account_name=storage_acc_name, account_key=storage_acc_key
+        )
         self.queue_name = queue_name
 
     def exists(self):
@@ -46,7 +48,9 @@ class AzureQueue:
         :return: None
         """
         try:
-            messages = self.queue_service.peek_messages(self.queue_name, num_messages=num_messages)
+            messages = self.queue_service.peek_messages(
+                self.queue_name, num_messages=num_messages
+            )
             for message in messages:
                 print(message.content)
         except Exception as e:
@@ -61,10 +65,16 @@ class AzureQueue:
         :param visibility_timeout: The amount of time a message that is retrieved but not deleted stays invisible
         :return: None
         """
-        messages = self.queue_service.get_messages(self.queue_name, num_messages=num_messages, visibility_timeout=visibility_timeout)
+        messages = self.queue_service.get_messages(
+            self.queue_name,
+            num_messages=num_messages,
+            visibility_timeout=visibility_timeout,
+        )
         for message in messages:
             print(message.content)
-            self.queue_service.delete_message(self.queue_name, message.id, message.pop_receipt)
+            self.queue_service.delete_message(
+                self.queue_name, message.id, message.pop_receipt
+            )
 
     def get_queue_length(self):
         """
@@ -89,7 +99,7 @@ class AzureQueue:
 
 
 if __name__ == "__main__":
-    queue_names = ['anaunknownreq', 'anaeachreq', 'anaerrormsgs']
+    queue_names = ["anaunknownreq", "anaeachreq", "anaerrormsgs"]
 
     # Test Functions
     for each_queue in queue_names:

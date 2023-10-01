@@ -13,11 +13,11 @@ from modules.kommunicate.kommunicate_bot import komm_handle_df_request
 
 # Define the DialogFlow service handlers here for each platform
 service_handlers = {
-    'facebook': facebook_handle_df_request,
-    'twitter': twitter_handle_df_request,
-    'whatsapp': whatsapp_handle_df_request,
-    'slack': slack_handle_df_request,
-    'kommunicate': komm_handle_df_request
+    "facebook": facebook_handle_df_request,
+    "twitter": twitter_handle_df_request,
+    "whatsapp": whatsapp_handle_df_request,
+    "slack": slack_handle_df_request,
+    "kommunicate": komm_handle_df_request,
 }
 
 
@@ -47,8 +47,8 @@ def handle_request(request):
     request = request.json
     session = None
     platform = None
-    if 'session' in request:
-        session = request['session']
+    if "session" in request:
+        session = request["session"]
         platform, session_id = get_platform_and_session_id(session)
     if session is None or platform is None:
         print(session)

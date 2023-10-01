@@ -57,22 +57,14 @@ except ConnectionError as e:
 
 
 btn_info = [
-                {
-                    "type": "web_url",
-                    "label": "See flight details",
-                    "url": "https://www.google.com"
-                },
-                {
-                    "type": "web_url",
-                    "label": "Map it",
-                    "url": "https://www.google.com"
-                },
-                {
-                    "type": "web_url",
-                    "label": "Speak to an agent",
-                    "url": "https://twitter.com/messages/compose?recipient_id=243654400"
-                }
-            ]
+    {"type": "web_url", "label": "See flight details", "url": "https://www.google.com"},
+    {"type": "web_url", "label": "Map it", "url": "https://www.google.com"},
+    {
+        "type": "web_url",
+        "label": "Speak to an agent",
+        "url": "https://twitter.com/messages/compose?recipient_id=243654400",
+    },
+]
 
 
 def twitter_get_flight_status(request, session_id):
@@ -83,26 +75,26 @@ def twitter_get_flight_status(request, session_id):
     :return:
     """
     api_resp = flight_status.fetch_flight_status(request)
-    if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
+    if "preamble" in api_resp.keys() and api_resp["preamble"] is not None:
         twitter_core.send_dm(session_id, api_resp["preamble"])
         sleep(1)
     for each_flight in api_resp["response_list"]:
-            twitter_core.send_dm(session_id, each_flight['msg'])
+        twitter_core.send_dm(session_id, each_flight["msg"])
 
 
 def twitter_dutyfree(request, session_id):
     btn_info = [
-                    {
-                        "type": "web_url",
-                        "label": "Order Items for Pickup",
-                        "url": "https://caribbeanairlinesdutyfree.com/"
-                    },
-                    {
-                        "type": "web_url",
-                        "label": "More Info on CAL Duty Free",
-                        "url": "https://www.caribbean-airlines.com/#/caribbean-experience/duty-free"
-                    }
-                ]
+        {
+            "type": "web_url",
+            "label": "Order Items for Pickup",
+            "url": "https://caribbeanairlinesdutyfree.com/",
+        },
+        {
+            "type": "web_url",
+            "label": "More Info on CAL Duty Free",
+            "url": "https://www.caribbean-airlines.com/#/caribbean-experience/duty-free",
+        },
+    ]
     twitter_core.send_text_with_buttons(session_id, TWITTER_DUTY_FREE_MSG, btn_info)
 
 
@@ -111,13 +103,13 @@ def twitter_miles(request, session_id):
         {
             "type": "web_url",
             "label": "Manage Miles Account",
-            "url": "https://caribbeanairlines.frequentflyer.aero"
+            "url": "https://caribbeanairlines.frequentflyer.aero",
         },
         {
             "type": "web_url",
             "label": "More Info on Caribbean Miles",
-            "url": "https://www.caribbean-airlines.com/#/loyalty-programmes/caribbean-miles"
-        }
+            "url": "https://www.caribbean-airlines.com/#/loyalty-programmes/caribbean-miles",
+        },
     ]
     twitter_core.send_text_with_buttons(session_id, TWITTER_CAL_MILES_MSG, btn_info)
 
@@ -127,7 +119,7 @@ def twitter_checkin(request, session_id):
         {
             "type": "web_url",
             "label": "Online Check-In",
-            "url": "https://checkin.si.amadeus.net/1ASIHSSCWEBBW/sscwbw/checkin"
+            "url": "https://checkin.si.amadeus.net/1ASIHSSCWEBBW/sscwbw/checkin",
         }
     ]
     twitter_core.send_text_with_buttons(session_id, TWITTER_CHECKIN_MSG, btn_info)
@@ -138,7 +130,7 @@ def twitter_cars(request, session_id):
         {
             "type": "web_url",
             "label": "Rent a Car",
-            "url": "https://cars.cartrawler.com/caribbeanairlines"
+            "url": "https://cars.cartrawler.com/caribbeanairlines",
         }
     ]
     twitter_core.send_text_with_buttons(session_id, TWITTER_CAR_RENTAL_MSG, btn_info)
@@ -149,7 +141,7 @@ def twitter_hotels(request, session_id):
         {
             "type": "web_url",
             "label": "Book a Hotel",
-            "url": "http://hotels.caribbean-airlines.com"
+            "url": "http://hotels.caribbean-airlines.com",
         }
     ]
     twitter_core.send_text_with_buttons(session_id, TWITTER_HOTEL_MSG, btn_info)
@@ -160,28 +152,32 @@ def twitter_miles_check(request, session_id):
     pprint(request)
     api_resp = cal_miles.get_miles(request)
     if api_resp is None:
-        twitter_core.send_dm(session_id, "Sorry, I can't seem to get any information for that account.")
+        twitter_core.send_dm(
+            session_id, "Sorry, I can't seem to get any information for that account."
+        )
     else:
         miles = "{:,}".format(api_resp)
-        twitter_core.send_dm(session_id, "Your account currently has {0} miles.".format(str(miles)))
+        twitter_core.send_dm(
+            session_id, "Your account currently has {0} miles.".format(str(miles))
+        )
 
 
 # The POSITION OF THIS dict MATTERS - BEFORE twitter_handle_df_request and AFTER other functions
 intent_mapping = {
-    'flight.status': twitter_get_flight_status,
-    'faq.dutyfree': twitter_dutyfree,
-    'faq.miles_info': twitter_miles,
-    'faq.checkin.online': twitter_checkin,
-    'faq.cars': twitter_cars,
-    'faq.hotels': twitter_hotels,
-    'flight.checkin': twitter_checkin,
-    'faq.miles_check': twitter_miles_check
+    "flight.status": twitter_get_flight_status,
+    "faq.dutyfree": twitter_dutyfree,
+    "faq.miles_info": twitter_miles,
+    "faq.checkin.online": twitter_checkin,
+    "faq.cars": twitter_cars,
+    "faq.hotels": twitter_hotels,
+    "flight.checkin": twitter_checkin,
+    "faq.miles_check": twitter_miles_check,
 }
 
 
 def twitter_handle_df_request(request, session_id):
-    if 'queryResult' in request and 'intent' in request['queryResult']:
-        intent = request['queryResult']['intent']['displayName']
+    if "queryResult" in request and "intent" in request["queryResult"]:
+        intent = request["queryResult"]["intent"]["displayName"]
     else:
         raise Exception("Twitter DF handler needs a valid intent")
     # Use intent mapping dict to call function. All functions take the request and the session_id
@@ -202,18 +198,21 @@ def twitter_handle_user_request(request):
     :return:
     """
 
-    text = request['direct_message_events'][0]['message_create']['message_data']['text']
-    sender_id = request['direct_message_events'][0]['message_create']['sender_id']
-    df_sender_id = 'twitter_' + sender_id
+    text = request["direct_message_events"][0]["message_create"]["message_data"]["text"]
+    sender_id = request["direct_message_events"][0]["message_create"]["sender_id"]
+    df_sender_id = "twitter_" + sender_id
     ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")
     pprint("Printing response from Google")
     pprint(ai_json_response)
     # text_to_send = remove_escaped_characters(ai_json_response["result"]["fulfillment"]["speech"])
-    if 'fulfillmentText' in ai_json_response:
-        text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
+    if "fulfillmentText" in ai_json_response:
+        text_to_send = remove_escaped_characters(ai_json_response["fulfillmentText"])
         twitter_core.send_dm(sender_id, text_to_send)
         # twitter_core.send_text_with_buttons(sender_id, text_to_send, btn_info)
-    if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
-        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
+    if "action" in ai_json_response and ai_json_response["action"] == "input.unknown":
+        thread = Thread(
+            target=log_request,
+            kwargs={"df_response": ai_json_response, "err_type": "unknown"},
+        )
         thread.start()
         # log_request(ai_json_response)

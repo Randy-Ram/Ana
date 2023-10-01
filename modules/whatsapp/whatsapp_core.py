@@ -11,11 +11,7 @@ def send_message(to_num, message):
             body = WHATSAPP_ERROR_MSG_BODY
         else:
             body = message
-        msg = client.messages.create(
-                                      body=body,
-                                      from_=whatspp_acc_num,
-                                      to=to_num
-                                  )
+        msg = client.messages.create(body=body, from_=whatspp_acc_num, to=to_num)
 
     except Exception as err:
         print(err)

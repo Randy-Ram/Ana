@@ -19,7 +19,7 @@ def on_postback(sender, text, requestInfo):
     print("postback")
     print(text)
     # fb_bot.send_text_message(sender, 'Received postback "{0}"'.format(text))
-    if text == 'get_started':
+    if text == "get_started":
         send_initial_options(sender)
     elif text == "transfer_request":
         handover_request(sender)
@@ -37,17 +37,21 @@ def on_location(sender, location, requestInfo):
 def create_welcome_message(sender):
     user_info = fb_bot.get_userinfo(sender)
     pprint(user_info)
-    first_name = user_info['first_name']
+    first_name = user_info["first_name"]
     return f"\U0001F916 - Hello {first_name}, I'm Ana. I'm a robot and I'll try to answer any questions you may have."
 
 
 def send_initial_options(sender):
-    fb_bot.send_text_message(sender, create_welcome_message(sender), [
-        FBAttachment.quick_reply("Check In \U0001F3AB"),
-        FBAttachment.quick_reply("Flight Status \U0001F55B"),
-        FBAttachment.quick_reply("Baggage Info \U0001F6C4"),
-        FBAttachment.quick_reply("Make Booking \U0001F5A5")
-    ])
+    fb_bot.send_text_message(
+        sender,
+        create_welcome_message(sender),
+        [
+            FBAttachment.quick_reply("Check In \U0001F3AB"),
+            FBAttachment.quick_reply("Flight Status \U0001F55B"),
+            FBAttachment.quick_reply("Baggage Info \U0001F6C4"),
+            FBAttachment.quick_reply("Make Booking \U0001F5A5"),
+        ],
+    )
 
 
 def display_sender_action(sender_action, recipient_id):
@@ -57,13 +61,11 @@ def display_sender_action(sender_action, recipient_id):
     :param recipient_id: ID of recipient
     :return:
     """
-    graph_endpoint = 'https://graph.facebook.com/v2.6/me/messages?access_token={0}'.format(token)
-    payload = {
-        "recipient": {"id": recipient_id},
-        "sender_action": sender_action
-    }
+    graph_endpoint = (
+        "https://graph.facebook.com/v2.6/me/messages?access_token={0}".format(token)
+    )
+    payload = {"recipient": {"id": recipient_id}, "sender_action": sender_action}
     response = fb_bot._send_payload(payload, graph_endpoint)
-
 
 
 def handle_action(action, df_response, user_session):
@@ -77,9 +79,13 @@ def handover_check(recipient_id, df_response=None, text=None):
 def handover_request(recipient_id, silent=False):
     print("Handing over request to agent...")
     if not silent:
-        fb_bot.send_text_message(recipient_id,
-                              "One sec, transferring you to an agent for assistance (Response times may vary).")
-    pass_thread_endpoint = 'https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
+        fb_bot.send_text_message(
+            recipient_id,
+            "One sec, transferring you to an agent for assistance (Response times may vary).",
+        )
+    pass_thread_endpoint = "https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}".format(
+        token
+    )
     payload = {
         "recipient": {"id": recipient_id},
         "target_app_id": 263902037430900,
@@ -89,12 +95,12 @@ def handover_request(recipient_id, silent=False):
 
 def on_linked(sender, login, requestInfo):
     print("link")
-    print(sender+" " + login)
+    print(sender + " " + login)
 
 
 def on_unlinked(sender, requestInfo):
     print("unlink")
-    print(sender+" unlink")
+    print(sender + " unlink")
 
 
 def on_message(sender, text, requestInfo):
@@ -104,6 +110,8 @@ def on_message(sender, text, requestInfo):
 
 
 def process_message(sender, text):
-    fb_bot.send_text_message(sender, "Please share your location", [
-        persistent_menu.FBAttachment.quick_reply_location()
-    ])
+    fb_bot.send_text_message(
+        sender,
+        "Please share your location",
+        [persistent_menu.FBAttachment.quick_reply_location()],
+    )

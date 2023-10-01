@@ -36,11 +36,10 @@ def display_sender_action(sender_action, recipient_id):
     :param recipient_id: ID of recipient
     :return:
     """
-    graph_endpoint = 'https://graph.facebook.com/v2.6/me/messages?access_token={0}'.format(token)
-    payload = {
-        "recipient": {"id": recipient_id},
-        "sender_action": sender_action
-    }
+    graph_endpoint = (
+        "https://graph.facebook.com/v2.6/me/messages?access_token={0}".format(token)
+    )
+    payload = {"recipient": {"id": recipient_id}, "sender_action": sender_action}
     response = fb_bot._send_payload(payload, graph_endpoint)
 
 
@@ -54,9 +53,13 @@ def configure_bot():
 def handover_request(request, session_id, silent=False):
     print("Handing over request to agent...")
     if not silent:
-        fb_bot.send_text_message(session_id,
-                                "One sec, transferring you to an agent for assistance (Response times may vary).")
-    pass_thread_endpoint = 'https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}'.format(token)
+        fb_bot.send_text_message(
+            session_id,
+            "One sec, transferring you to an agent for assistance (Response times may vary).",
+        )
+    pass_thread_endpoint = "https://graph.facebook.com/v2.6/me/pass_thread_control?access_token={0}".format(
+        token
+    )
     payload = {
         "recipient": {"id": session_id},
         "target_app_id": 263902037430900,
@@ -67,29 +70,33 @@ def handover_request(request, session_id, silent=False):
 def facebook_flight_status(request=None, session_id=None):
     api_resp = flight_status.fetch_flight_status(request)
     pprint(f"Flight status response: {api_resp}")
-    if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
+    if "preamble" in api_resp.keys() and api_resp["preamble"] is not None:
         fb_bot.send_text_message(session_id, api_resp["preamble"])
         sleep(1)
     for each_flight in api_resp["response_list"]:
-        if 'fb_card' in each_flight.keys():
-            fb_bot.send_message_TypeC(session_id, each_flight['fb_card'])
+        if "fb_card" in each_flight.keys():
+            fb_bot.send_message_TypeC(session_id, each_flight["fb_card"])
         else:
-            fb_bot.send_text_message(session_id, each_flight['msg'])
+            fb_bot.send_text_message(session_id, each_flight["msg"])
 
 
 def facebook_miles_check(request=None, session_id=None):
     api_resp = cal_miles.get_miles(request)
     if api_resp is None:
-        fb_bot.send_text_message(session_id, "Sorry, I can't seem to get any information for that account.")
+        fb_bot.send_text_message(
+            session_id, "Sorry, I can't seem to get any information for that account."
+        )
     else:
         miles = "{:,}".format(api_resp)
-        fb_bot.send_text_message(session_id, "Your account currently has {0} miles.".format(str(miles)))
+        fb_bot.send_text_message(
+            session_id, "Your account currently has {0} miles.".format(str(miles))
+        )
 
 
 intent_mapping = {
     "flight.status": facebook_flight_status,
     "faq.miles_check": facebook_miles_check,
-    "bot.handover": handover_request
+    "bot.handover": handover_request,
 }
 
 faq_mapping = {
@@ -101,15 +108,15 @@ faq_mapping = {
     "flight.checkin": faq_checkin_online,
     "faq.cars": faq_rent_car,
     "faq.reservations": faq_reservations,
-    "faq.contacts": faq_contacts
+    "faq.contacts": faq_contacts,
 }
 
 
 def facebook_handle_df_request(request, session_id):
     # pprint(session_id)
     print("HEREHERE!", request)
-    if 'queryResult' in request and 'intent' in request['queryResult']:
-        intent = request['queryResult']['intent']['displayName']
+    if "queryResult" in request and "intent" in request["queryResult"]:
+        intent = request["queryResult"]["intent"]["displayName"]
     else:
         raise Exception(FB_DF_HANLDER_INVALID_INTENT)
     # Use intent mapping dict to call function. All functions take the request and the session_id
@@ -129,16 +136,26 @@ def facebook_handle_request(sender, text):
     try:
         display_sender_action("typing_on", sender)
         df_sender_id = "facebook_" + sender
-        ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")
+        ai_json_response = df.detect_intent_texts(
+            df_project_id, df_sender_id, text, "en"
+        )
         pprint(sender)
         pprint(ai_json_response)
-        if 'fulfillmentText' in ai_json_response:
-            text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
+        if "fulfillmentText" in ai_json_response:
+            text_to_send = remove_escaped_characters(
+                ai_json_response["fulfillmentText"]
+            )
             display_sender_action("typing_off", sender)
             fb_bot.send_text_message(recipient_id=sender, text=text_to_send)
-        if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
+        if (
+            "action" in ai_json_response
+            and ai_json_response["action"] == "input.unknown"
+        ):
             # log_request(ai_json_response)
-            thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
+            thread = Thread(
+                target=log_request,
+                kwargs={"df_response": ai_json_response, "err_type": "unknown"},
+            )
             thread.start()
     except Exception:
         # handover_request(sender)

@@ -22,45 +22,43 @@ import json
 
 
 def queue_error_msg(msg):
-    q = AzureQueue('anaerrormsgs')
+    q = AzureQueue("anaerrormsgs")
     q.insert(msg)
 
 
 def queue_unknown_req(msg):
-    q = AzureQueue('anaunknownreq')
+    q = AzureQueue("anaunknownreq")
     q.insert(msg)
 
 
 def queue_request(msg):
-    q = AzureQueue('anaeachreq')
+    q = AzureQueue("anaeachreq")
     q.insert(msg)
 
 
 def log_error(msg):
-    msg = {
-        'msg': msg
-    }
+    msg = {"msg": msg}
     queue_error_msg(json.dumps(msg))
 
 
 def log_request(df_response, err_type="req"):
-    user_question = ''
-    bot_response = ''
-    bot_intent = ''
-    bot_action = ''
-    detection_confidence = ''
+    user_question = ""
+    bot_response = ""
+    bot_intent = ""
+    bot_action = ""
+    detection_confidence = ""
     try:
         # session = models.get_pg_session()
-        if df_response.get('queryText'):
-            user_question = df_response.get('queryText')
-        if df_response.get('fulfillmentText'):
-            bot_response = df_response.get('fulfillmentText')
-        if df_response.get('intent') and df_response['intent'].get('displayName'):
-            bot_intent = df_response['intent']['displayName']
-        if df_response.get('action'):
-            bot_action = df_response['action']
-        if df_response.get('intentDetectionConfidence'):
-            detection_confidence = df_response['intentDetectionConfidence']
+        if df_response.get("queryText"):
+            user_question = df_response.get("queryText")
+        if df_response.get("fulfillmentText"):
+            bot_response = df_response.get("fulfillmentText")
+        if df_response.get("intent") and df_response["intent"].get("displayName"):
+            bot_intent = df_response["intent"]["displayName"]
+        if df_response.get("action"):
+            bot_action = df_response["action"]
+        if df_response.get("intentDetectionConfidence"):
+            detection_confidence = df_response["intentDetectionConfidence"]
         # user_query = models.AnaUserQueries(user_question=user_question,
         #                                    bot_response=bot_response,
         #                                    bot_intent=bot_intent,
@@ -70,11 +68,11 @@ def log_request(df_response, err_type="req"):
         # session.commit()
         # session.close()
         msg = {
-            'query': user_question,
-            'bot_response': bot_response,
-            'intent': bot_intent,
-            'action': bot_action,
-            'confidence': detection_confidence
+            "query": user_question,
+            "bot_response": bot_response,
+            "intent": bot_intent,
+            "action": bot_action,
+            "confidence": detection_confidence,
         }
         msg = str(json.dumps(msg))
         print(json.loads(msg))

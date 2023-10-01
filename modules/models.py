@@ -52,5 +52,3 @@ import datetime
 
 
 # metadata.create_all()
-
-
