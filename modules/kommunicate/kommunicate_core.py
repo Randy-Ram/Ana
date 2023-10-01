@@ -4,11 +4,9 @@ from pprint import pprint
 import json
 
 
-headers = {
-    "Api-Key": kommunicate_api_key
-}
+headers = {"Api-Key": kommunicate_api_key}
 
-send_message_url = 'https://services.kommunicate.io/rest/ws/message/v2/send'
+send_message_url = "https://services.kommunicate.io/rest/ws/message/v2/send"
 
 
 def send_text_message(group_id, message):
@@ -16,9 +14,9 @@ def send_text_message(group_id, message):
         data = {
             "groupId": group_id,
             "message": message,
-            "fromUserName": kommunicate_bot_id
+            "fromUserName": kommunicate_bot_id,
         }
-        resp = requests.post(send_message_url, json=data,  headers=headers)
+        resp = requests.post(send_message_url, json=data, headers=headers)
         pprint(resp.text)
     except Exception as e:
         pprint(e)
@@ -53,8 +51,8 @@ def send_template_message(group_id, message, template_id, payload):
         "metadata": {
             "contentType": "300",
             "templateId": template_id,
-            "payload": payload
-        }
+            "payload": payload,
+        },
     }
     resp = requests.post(send_message_url, json=data, headers=headers)
     pprint(resp.text)
@@ -73,11 +71,7 @@ def send_message_buttons(message, group_id, payload):
         "groupId": group_id,
         "fromUserName": kommunicate_bot_id,
         "platform": "kommunicate",
-        "metadata": {
-            "contentType": "300",
-            "templateId": "3",
-            "payload": payload
-        }
+        "metadata": {"contentType": "300", "templateId": "3", "payload": payload},
     }
     pprint(data)
     send_generic_message(data=data)
@@ -115,11 +109,7 @@ def send_quick_reply(group_id, message, payload):
         "fromUserName": kommunicate_bot_id,
         "message": message,
         "platform": "kommunicate",
-        "metadata": {
-            "contentType": "300",
-            "templateId": "6",
-            "payload": str(payload)
-        }
+        "metadata": {"contentType": "300", "templateId": "6", "payload": str(payload)},
     }
     pprint(data)
     send_generic_message(data)
@@ -131,11 +121,7 @@ def send_card_message(group_id, message, payload):
         "fromUserName": kommunicate_bot_id,
         "message": message,
         "platform": "kommunicate",
-        "metadata": {
-            "contentType": "300",
-            "templateId": "10",
-            "payload": str(payload)
-        }
+        "metadata": {"contentType": "300", "templateId": "10", "payload": str(payload)},
     }
     pprint(data)
     send_generic_message(data)
@@ -147,11 +133,7 @@ def send_carousel_message(group_id, payload, message):
         "platform": "kommunicate",
         "groupId": group_id,
         "fromUserName": kommunicate_bot_id,
-        "metadata": {
-            "contentType": "300",
-            "templateId": "10",
-            "payload": payload
-        }
+        "metadata": {"contentType": "300", "templateId": "10", "payload": payload},
     }
     pprint(data)
     send_generic_message(data)
@@ -167,7 +149,7 @@ def send_message_with_autosuggestion(group_id, payload):
         "fromUserName": "ana",
         "platform": "kommunicate",
         "message": "Where are you travelling from?",
-        "metadata": payload
+        "metadata": payload,
     }
     pprint(data)
     resp = requests.post(send_message_url, json=data, headers=headers)
@@ -180,9 +162,7 @@ def transfer_to_agent(group_id, message):
         "message": message,
         "fromUserName": "ana",
         "platform": "kommunicate",
-        "metadata": {
-            "KM_ASSIGN_TO": ""
-        }
+        "metadata": {"KM_ASSIGN_TO": ""},
     }
     pprint(data)
     send_generic_message(data)
@@ -190,33 +170,17 @@ def transfer_to_agent(group_id, message):
 
 if __name__ == "__main__":
     source = [
-                {
-                    "searchKey": "POS, Port-of-Spain",
-                    "message": "POS"
-                },
-                {
-                    "searchKey": "MIA, Miami International Airport",
-                    "message": "MIA"
-                },
-                {
-                    "searchKey": "JFK, John F. Kennedy, NYC",
-                    "message": "JFK"
-                },
-                {
-                    "searchKey": "YYZ, Toronto",
-                    "message": "YYZ"
-                },
-                {
-                    "searchKey": "BGI, Bridgetown, Barbados",
-                    "message": "BGI"
-                }
+        {"searchKey": "POS, Port-of-Spain", "message": "POS"},
+        {"searchKey": "MIA, Miami International Airport", "message": "MIA"},
+        {"searchKey": "JFK, John F. Kennedy, NYC", "message": "JFK"},
+        {"searchKey": "YYZ, Toronto", "message": "YYZ"},
+        {"searchKey": "BGI, Bridgetown, Barbados", "message": "BGI"},
     ]
     # source = ["London", "Miami", "Port of Spain"]
     placeholder = "Enter City Name"
     payload = {
-        "KM_AUTO_SUGGESTION": json.dumps({
-            "placeholder": "Enter City Name",
-            "source": source
-        })
+        "KM_AUTO_SUGGESTION": json.dumps(
+            {"placeholder": "Enter City Name", "source": source}
+        )
     }
-    send_message_with_autosuggestion('16800298', payload)
+    send_message_with_autosuggestion("16800298", payload)

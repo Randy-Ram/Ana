@@ -8,7 +8,7 @@ from time import sleep
 from modules.logger import log_request, log_error
 from threading import Thread
 
-'''
+"""
 {'api_app_id': 'AEVF2N5EJ',
  'authed_users': ['UEU3DE71Q'],
  'event': {'channel': 'CEU39H3H8',
@@ -23,17 +23,17 @@ from threading import Thread
  'team_id': 'TBJN6RCRJ',
  'token': 'wVvpIhSl9dAz89dMmevnPuAR',
  'type': 'event_callback'}
-'''
+"""
 
 
 def slack_flight_status(request, session_id):
     api_resp = flight_status.fetch_flight_status(request)
     pprint(api_resp)
-    if 'preamble' in api_resp.keys() and api_resp['preamble'] is not None:
+    if "preamble" in api_resp.keys() and api_resp["preamble"] is not None:
         slack_core.send_message(session_id, api_resp["preamble"])
         sleep(1)
     for each_flight in api_resp["response_list"]:
-            slack_core.send_message(session_id, each_flight['msg'])
+        slack_core.send_message(session_id, each_flight["msg"])
 
 
 def slack_flight_loads(request, session_id):
@@ -45,19 +45,25 @@ def slack_flight_loads(request, session_id):
 
 intent_mapping = {
     "flight.loads": slack_flight_loads,
-    "flight.status": slack_flight_status
+    "flight.status": slack_flight_status,
 }
 
 
 def slack_handle_df_request(request, session_id):
-    if 'queryResult' in request and 'intentDetectionConfidence' in request['queryResult']:
-        if request['queryResult']['intentDetectionConfidence'] < 0.60:
-            slack_core.send_message(session_id, "I'm sorry, your request is vague. "
-                                                "Can you please be more specific about what you want?")
+    if (
+        "queryResult" in request
+        and "intentDetectionConfidence" in request["queryResult"]
+    ):
+        if request["queryResult"]["intentDetectionConfidence"] < 0.60:
+            slack_core.send_message(
+                session_id,
+                "I'm sorry, your request is vague. "
+                "Can you please be more specific about what you want?",
+            )
             # log_request(request)
             return
-    if 'queryResult' in request and 'intent' in request['queryResult']:
-        intent = request['queryResult']['intent']['displayName']
+    if "queryResult" in request and "intent" in request["queryResult"]:
+        intent = request["queryResult"]["intent"]["displayName"]
     else:
         raise Exception("Slack DF handler needs a valid intent")
     # Use intent mapping dict to call function. All functions take the request and the session_id
@@ -73,18 +79,21 @@ def slack_handle_df_request(request, session_id):
 
 def slack_handle_request(request):
     # pprint(request)
-    text = request['event']['text']
-    if '<@UEU3DE71Q>' in text:
-        text = text.replace('<@UEU3DE71Q>', '')
-    sender_id = request['event']['channel']
-    df_sender_id = 'slack_' + sender_id
+    text = request["event"]["text"]
+    if "<@UEU3DE71Q>" in text:
+        text = text.replace("<@UEU3DE71Q>", "")
+    sender_id = request["event"]["channel"]
+    df_sender_id = "slack_" + sender_id
     ai_json_response = df.detect_intent_texts(df_project_id, df_sender_id, text, "en")
     pprint(ai_json_response)
     # text_to_send = remove_escaped_characters(ai_json_response["result"]["fulfillment"]["speech"])
-    if 'fulfillmentText' in ai_json_response:
-        text_to_send = remove_escaped_characters(ai_json_response['fulfillmentText'])
+    if "fulfillmentText" in ai_json_response:
+        text_to_send = remove_escaped_characters(ai_json_response["fulfillmentText"])
         slack_core.send_message(sender_id, text_to_send)
-    if 'action' in ai_json_response and ai_json_response['action'] == "input.unknown":
-        thread = Thread(target=log_request, kwargs={'df_response': ai_json_response, 'err_type': 'unknown'})
+    if "action" in ai_json_response and ai_json_response["action"] == "input.unknown":
+        thread = Thread(
+            target=log_request,
+            kwargs={"df_response": ai_json_response, "err_type": "unknown"},
+        )
         thread.start()
         # log_request(ai_json_response)
